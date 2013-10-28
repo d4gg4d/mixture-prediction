@@ -1,0 +1,8 @@
+export(getSampleOf) # exporting methods implicitly exports the generic
+#importFrom("graphics", plot)
+#exportClasses(mle, profile.mle, summary.mle)
+## All methods for imported generics:
+#exportMethods(coef, confint, logLik, plot, profile, summary, 
+#              show, update, vcov)
+## implicit generics which do not have any methods here
+#export(AIC, BIC, nobs)
