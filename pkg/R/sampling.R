@@ -9,5 +9,5 @@ filterUser <- function(id, data) {
 }
 
 getBetween <- function(data, start, end) {
-  return(data[data$time >= as.numeric(start) & time <= as.numeric(end),]);
+  return(data[data$time >= as.numeric(start) & data$time <= as.numeric(end),]);
 }

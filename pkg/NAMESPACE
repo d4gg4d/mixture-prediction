@@ -1,4 +1,4 @@
-export(getSampleOf, filterUser) # exporting methods implicitly exports the generic
+export(getSampleOf, filterUser, getBetween) # exporting methods implicitly exports the generic
 #importFrom("graphics", plot)
 #exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:
