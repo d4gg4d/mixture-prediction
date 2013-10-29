@@ -2,7 +2,7 @@ importFrom(ggplot2, scale_size, ggtitle, qplot, geom_bar, aes, stat_sum)
 importFrom(ggmap, qmap)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
 ## exporting methods implicitly exports the generic
-export(getSampleOf, filterUser, getBetween, plotGisDistribution)
+export(getSampleOf, getSubSample, filterUser, getBetween, plotGisDistribution)
 #importFrom("graphics", plot)
 #exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:
