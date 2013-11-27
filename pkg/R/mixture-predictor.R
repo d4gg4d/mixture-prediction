@@ -17,12 +17,12 @@ mixture.predict <- function(models, newdata, score.fn, mixture) {
     #browser();
     latitude <- predictions$latitude.fit;
     longitude <- predictions$longitude.fit;
-    return(score.function(latitude, longitude, xvalid=target.data$latitude, yvalid=target.data$latitude));
+    return(score.function(latitude, longitude, xvalid=target.data$latitude, yvalid=target.data$longitude, scale=5000)); #todo pass this parameter as input (...?)
   }
-  
+
   predictions <- lapply(history.models$trained.models, prediction.prototype.call, target.data=newdata);
   histories <- lapply(predictions, referee.prototype.call, target.data=newdata, score.function=score.fn);
-  
+
   history.models <- mapply(list,
                            trained.model=models,
                            predictions=predictions,
@@ -35,7 +35,7 @@ mixture.predict <- function(models, newdata, score.fn, mixture) {
 
     create.datacube <- function(index, history.models) {
       take.slice <- function(model, index) {
-        return(cbind(model$prediction[index,], model$history[index]));
+        return(cbind(model$prediction[index,], history=model$history[index]));
       };
 
       ##todo for clarity rewrite this one 
@@ -43,7 +43,7 @@ mixture.predict <- function(models, newdata, score.fn, mixture) {
       for (i in max(1, index - 4) : index) {
         data <- rbind(data, cbind(ldply(history.models, take.slice, i), ID=i));
       };
-      data$row <- 1:nrow(data) %% length(history.models);          
+      data$row <- 1:nrow(data) %% length(history.models);
       m <- melt(data, id.vars = c("row", "ID"));
       datacube <- acast(m, row ~ variable ~ ID);
       return(datacube);
