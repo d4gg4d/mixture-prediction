@@ -1,7 +1,5 @@
-
+## TODO Rdocs...
 ## takes in list of models, data.frame of new data, function of mixture predictor.
-library(plyr)
-
 ## returns vector/matrix of mixture response corresponding to size of new data.
 mixture.predict <- function(models, newdata, score.fn, mixture) {
 

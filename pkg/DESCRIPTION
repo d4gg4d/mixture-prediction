@@ -6,7 +6,7 @@ Authors@R: c(person("Sami", "Airaksinen", role = c("aut", "cre"),
                      email = "sami.airaksinen@aalto.fi"))
 Author: Sami Airaksinen
 Maintainer: Sami Airaksinen <Sami.Airaksinen@aalto.fi>
-Depends: R (>= 2.15.2), ggmap, ggplot2, gridExtra
+Depends: R (>= 2.15.2), ggmap, ggplot2, gridExtra, plyr, reshape2
 Suggests: 
 Description: Thesis work packaged nicely...
 License: GPL (>= 2)
