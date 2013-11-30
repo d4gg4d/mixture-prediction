@@ -51,6 +51,7 @@ mixture.predict <- function(models, newdata, score.fn, mixture) {
     
     return(mixture(create.datacube(index, history.models)));
   }
+  ## todo remove 10 limit and verify that it still works
   mixture.results <- lapply(10:nrow(newdata), mixture.prototype.call, mixture, history.models);
   return(ldply(mixture.results, identity));
 }
