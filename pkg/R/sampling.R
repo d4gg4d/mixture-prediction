@@ -16,3 +16,7 @@ getSubSample <- function(data, sampleError = 0.03) {
   n = as.integer(min(nrow(data), 1/(sampleError)^2));
   return(getSampleOf(data, size=n));
 }
+
+getClosestTo <- function(data, time) {
+  return(data[nrow(data),])
+}
