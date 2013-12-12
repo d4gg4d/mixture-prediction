@@ -13,10 +13,11 @@ slice.data <- function(data, time.dist, t.window.length) {
 feature.extraction.prototype.call <- function(feature, data, t.dist, t.window.length) {
   ##list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
   dataslices <- slice.data(data, t.dist, t.window.length);
-  return(ldply(dataslices, function(sliding.window) {
+  return(laply(dataslices, function(sliding.window) {
     last.row <- sliding.window[nrow(sliding.window),]
-    fitted.feature <- feature$fit(sliding.window[-nrow(sliding.window),])
+    fitted.feature <- feature(sliding.window[-nrow(sliding.window),])
     ## todo or optionally with(sliding.window,{lm()}) via environment??
+    ## should this be called from feature, e.g. feature$predict?
     return(predict(fitted.feature, newdata=last.row))
   }))
 }

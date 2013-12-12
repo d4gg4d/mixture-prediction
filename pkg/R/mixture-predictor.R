@@ -19,7 +19,7 @@ mixture.predict <- function(features, models, newdata, score.fn, mixture, t.dist
 
   history.models <- list(trained.models=models);
 
-  feature.extraction <- ldply(features, feature.extraction.prototype.call, data=newdata, t.dist=t.dist, t.window.length=t.window.length);
+  feature.extraction <- data.frame(t(tlaply(features, feature.extraction.prototype.call, data=newdata, t.dist=t.dist, t.window.length=t.window.length)));
   predictions <- lapply(history.models$trained.models, prediction.prototype.call, target.data=feature.extraction);
   histories <- lapply(predictions, referee.prototype.call, target.data=newdata, score.function=score.fn);
 
