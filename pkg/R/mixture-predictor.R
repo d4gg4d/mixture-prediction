@@ -3,29 +3,6 @@
 ## returns vector/matrix of mixture response corresponding to size of new data.
 mixture.predict <- function(features, models, newdata, score.fn, mixture, t.dist, t.window.lenght) {
 
-  # calculates predictor variable vectors for each data point based on the t-values
-  feature.extraction.prototype.call <- function(feature, data, t.dist, t.window.length) {
-
-    ## generates data.frames for each row from [data.starttime + distance + length, data.endtime] so that
-    ## it contains data between [row.time - distance - length, row.time - distance]
-    slice.data <- function(data, time.dist, t.window.length) {
-      sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
-      return(alply(sliding.cursors, 1, function(row) {
-        sliding.window <- getBetween(data, row$time - t.window.length, row$time)
-        predicted.row <- getClosestTo(data, row$time + time.dist)
-        return(rbind(sliding.window, predicted.row))
-      }, .expand=FALSE))
-    }
-
-    dataslices <- slice.data(data, t.dist, t.window.length); ##list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
-    return(ldply(dataslices, function(sliding.window) {
-      last.row <- sliding.window[nrow(sliding.window),]
-      fitted.feature <- feature$fit(sliding.window[-nrow(sliding.window),])
-      ## todo or optionally with(sliding.window,{lm()}) via environment??
-      return(predict(fitted.feature, newdata=last.row))
-    }))
-  }
-
   # returns prediction vectors in data.frame
   prediction.prototype.call <- function(model.pair, target.data) {
     latitude <- data.frame(predict(model.pair$latitude, target.data));
@@ -53,27 +30,6 @@ mixture.predict <- function(features, models, newdata, score.fn, mixture, t.dist
                            SIMPLIFY=FALSE);
   ## end of manipulating history-models
 
-  ## input for mixture function will be datacube (length(models), length(response.variables), history.size)
-  mixture.prototype.call <- function(index, mixture, history.models) {
-
-    create.datacube <- function(index, history.models) {
-      take.slice <- function(model, index) {
-        return(cbind(model$prediction[index,], history=model$history[index]));
-      };
-
-      ##todo for clarity rewrite this one 
-      data <- data.frame();
-      for (i in max(1, index - 4) : index) {
-        data <- rbind(data, cbind(ldply(history.models, take.slice, i), ID=i));
-      };
-      data$row <- 1:nrow(data) %% length(history.models);
-      m <- melt(data, id.vars = c("row", "ID"));
-      datacube <- acast(m, row ~ variable ~ ID);
-      return(datacube);
-    };
-    
-    return(mixture(create.datacube(index, history.models)));
-  }
   ## todo remove 10 limit and verify that it still works
   mixture.results <- lapply(10:nrow(newdata), mixture.prototype.call, mixture, history.models);
   return(ldply(mixture.results, identity));
