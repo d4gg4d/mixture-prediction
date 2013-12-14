@@ -1,5 +1,6 @@
 ## generates data.frames for each row from [data.starttime + distance + length, data.endtime] so that
 ## it contains data between [row.time - distance - length, row.time - distance]
+## returns list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
 slice.data <- function(data, time.dist, t.window.length) {
   sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
   return(alply(sliding.cursors, 1, function(row) {
@@ -11,13 +12,22 @@ slice.data <- function(data, time.dist, t.window.length) {
 
 ## calculates predictor variable vectors for each data point based on the t-values
 feature.extraction <- function(feature, data, t.dist, t.window.length) {
-  ##list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
   dataslices <- slice.data(data, t.dist, t.window.length);
-  return(laply(dataslices, function(sliding.window) {
-    last.row <- sliding.window[nrow(sliding.window),]
-    fitted.feature <- feature(sliding.window[-nrow(sliding.window),])
+
+  feature.fit <- function(data, target) {
+    fitted.feature <- feature(data)
     ## todo or optionally with(sliding.window,{lm()}) via environment??
     ## should this be called from feature, e.g. feature$predict?
-    return(predict(fitted.feature, newdata=last.row))
+    return(predict(fitted.feature, newdata=target))
+  }
+
+  keeps <- function(data) {
+    return(data$time) ##todo extract as parameter
+  }
+
+  return(laply(dataslices, function(sliding.window) {
+    last.row <- sliding.window[nrow(sliding.window),]
+    window <- sliding.window[-nrow(sliding.window),]
+    return(feature.fit(window, last.row))
   }))
 }
