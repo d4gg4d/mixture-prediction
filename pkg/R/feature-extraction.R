@@ -10,6 +10,14 @@ slice.data <- function(data, time.dist, t.window.length) {
   }, .expand=FALSE))
 }
 
+## getting target vectors for validation
+extract.target.data <- function(data, time.dist, t.window.length) {
+  sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
+  return(adply(sliding.cursors, 1, function(row) {
+    return(getClosestTo(data, row$time + time.dist))
+  }, .expand=FALSE))
+}
+
 ## calculates predictor variable vectors for each data point based on the t-values
 feature.extraction <- function(feature, windows) {
 
