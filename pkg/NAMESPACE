@@ -6,7 +6,7 @@ importFrom(gridExtra, grid.arrange, arrangeGrob)
 ## exporting methods implicitly exports the generic
 export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo)
 export(plotGisDistribution)
-export(mixture.predict, feature.extraction)
+export(mixture.predict, features.extraction)
 
 ##exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:

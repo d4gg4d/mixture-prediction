@@ -11,23 +11,32 @@ slice.data <- function(data, time.dist, t.window.length) {
 }
 
 ## calculates predictor variable vectors for each data point based on the t-values
-feature.extraction <- function(feature, data, t.dist, t.window.length) {
-  dataslices <- slice.data(data, t.dist, t.window.length);
+feature.extraction <- function(feature, windows) {
 
   feature.fit <- function(data, target) {
-    fitted.feature <- feature(data)
+    fitted.feature <- feature$fit(data)
     ## todo or optionally with(sliding.window,{lm()}) via environment??
     ## should this be called from feature, e.g. feature$predict?
     return(predict(fitted.feature, newdata=target))
   }
 
+  return(laply(windows, function(sliding.window) {
+      last.row <- sliding.window[nrow(sliding.window),]
+      window <- sliding.window[-nrow(sliding.window),]
+      return(feature.fit(window, last.row))
+    }))
+}
+
+features.extraction <- function(features, data, t.dist, t.window.length, keep=NULL) {
+  dataslices <- slice.data(data, t.dist, t.window.length);
+  
   keeps <- function(data) {
     return(data$time) ##todo extract as parameter
   }
 
-  return(laply(dataslices, function(sliding.window) {
-    last.row <- sliding.window[nrow(sliding.window),]
-    window <- sliding.window[-nrow(sliding.window),]
-    return(feature.fit(window, last.row))
-  }))
+  fitted <- data.frame(t(laply(features, feature.extraction, dataslices)))
+  keeps <- setNames(ldply(dataslices, function(slice) {
+    return(keeps(slice[nrow(slice),]))
+  })[,-1])
+  return(cbind(keeps,fitted))
 }
