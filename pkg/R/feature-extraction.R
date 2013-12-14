@@ -27,16 +27,11 @@ feature.extraction <- function(feature, windows) {
     }))
 }
 
-features.extraction <- function(features, data, t.dist, t.window.length, keep=NULL) {
-  dataslices <- slice.data(data, t.dist, t.window.length);
-  
-  keeps <- function(data) {
-    return(data$time) ##todo extract as parameter
-  }
-
+features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time")) {
+  dataslices <- slice.data(data, t.dist, t.window.length)
   fitted <- data.frame(t(laply(features, feature.extraction, dataslices)))
-  keeps <- setNames(ldply(dataslices, function(slice) {
-    return(keeps(slice[nrow(slice),]))
-  })[,-1])
-  return(cbind(keeps,fitted))
+  kept <- ldply(dataslices, function(slice) {
+    return(slice[nrow(slice),names(data) %in% keep])
+  })[,-1]
+  return(setNames(cbind(kept,fitted), c(keep, unlist(lapply(features, function(feature){ return(feature$name)})))))
 }
