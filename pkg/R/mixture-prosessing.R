@@ -15,6 +15,6 @@ create.datacube <- function(index, history.models) {
 };
 
 ## input for mixture function will be datacube (length(models), length(response.variables), history.size)
-mixture.prototype.call <- function(index, mixture, history.models) {
+mixture.internal <- function(index, mixture, history.models) {
   return(mixture(create.datacube(index, history.models)));
 }

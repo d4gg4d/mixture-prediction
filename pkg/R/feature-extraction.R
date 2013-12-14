@@ -10,7 +10,7 @@ slice.data <- function(data, time.dist, t.window.length) {
 }
 
 ## calculates predictor variable vectors for each data point based on the t-values
-feature.extraction.prototype.call <- function(feature, data, t.dist, t.window.length) {
+feature.extraction <- function(feature, data, t.dist, t.window.length) {
   ##list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
   dataslices <- slice.data(data, t.dist, t.window.length);
   return(laply(dataslices, function(sliding.window) {
