@@ -1,6 +1,14 @@
-## generates data.frames for each row from [data.starttime + distance + length, data.endtime] so that
-## it contains data between [row.time - distance - length, row.time - distance]
-## returns list of data.frames, size of t.window.length, moved backwards > t.dist, last row is target time
+#' function to constructs sliding window for each desired feature extraction timeslot
+#' 
+#' @param data from which sliding windows are constructed. Sliding
+#' windows are constructed from beginning of data for each target prediction vector.
+#' 
+#' @param time.dist distance between sliding windows last and second last rows
+#'
+#' @param t.window.length size of sliding window in time units
+#'
+#' @return list of sliding windows, where prediction target is last row of the sliding window data.frame
+#' 
 slice.data <- function(data, time.dist, t.window.length) {
   sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
   return(alply(sliding.cursors, 1, function(row) {
@@ -10,7 +18,7 @@ slice.data <- function(data, time.dist, t.window.length) {
   }, .expand=FALSE))
 }
 
-## getting target vectors for validation
+## todo documentation 
 extract.target.data <- function(data, time.dist, t.window.length) {
   sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
   return(adply(sliding.cursors, 1, function(row) {
@@ -18,7 +26,16 @@ extract.target.data <- function(data, time.dist, t.window.length) {
   }, .expand=FALSE))
 }
 
-## calculates predictor variable vectors for each data point based on the t-values
+#' Extract feature from sliding windows. Given list of sliding
+#' windows, feature is fitted to window data and then the fitted
+#' feature is used to predict its value at desired time.
+#' 
+#' @param feature feature to be fitted
+#'
+#' @param windows list of sliding windows where the feature is fitted
+#'
+#' @return array of extracted features at given time
+#'
 feature.extraction <- function(feature, windows) {
 
   feature.fit <- function(data, target) {
@@ -35,6 +52,23 @@ feature.extraction <- function(feature, windows) {
     }))
 }
 
+#' Wrapper method for feature extraction. Creates data slices, extract
+#' kept values and combines results from actual method (and names
+#' columns). Notice that dataslices keeps predicted target vector in
+#' its last row.
+#' 
+#' @param features list of features to be fitted.
+#'
+#' @param data to which against feature extraction is made out of
+#'
+#' @param t.dist time distance of sliding window and fitted value
+#'
+#' @param t.window.length size of the sliding window in time units
+#'
+#' @param keep values that are kept from the original data and are combined with extracted features
+#'
+#' @return dataframe where each feature is as its own column 
+#' 
 features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time")) {
   dataslices <- slice.data(data, t.dist, t.window.length)
   fitted <- data.frame(t(laply(features, feature.extraction, dataslices)))
