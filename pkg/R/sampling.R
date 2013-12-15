@@ -1,3 +1,19 @@
+getRandomInterval <- function(data, length, months=1, days=0, hours=0) {
+  startDate <- as.POSIXlt(sample(data$time, size=1), origin=attr(data, "time.origin"));
+  return(getFromInterval(startDate, data, length, months, days, hours));
+}
+
+getFromInterval <- function(startDate, data, length, months=1, days=0, hours=0) {
+  toEnd <- function(date, months, days, hours) {
+    .date <- date
+    .date$mon <- endDate$mon + months;
+    .date$day <- endDate$day + days;
+    .date$hours <- endDate$hours + hours;
+    return(.date)
+  }
+  endDate <- if (is.null(length)) toEnd(startDate, months, days, hours) else startDate + length;
+  return(getBetween(data, startDate, endDate));
+}
 
 getSampleOf <- function(data, size=10, portion=NULL) {
   sampleSize <- ifelse(is.null(portion), size, portion*nrow(data))
