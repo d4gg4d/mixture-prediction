@@ -28,12 +28,15 @@ plotGisDistribution <- function(data) {
                ncol=2, widths=c(2/3,1/3), main=paste("GIS statistics of a user",userId));
 }
 
-timeline.plots <- function(data) {
+separate.timeline.plots <- function(data, variables) {
   base.plot <- ggplot(data, eval(substitute(aes(x=as.POSIXct(time, origin=org)), list(org=attr(data, "time.origin"))))) + xlab("dates")
-  var.names <- lapply(c("latitude", "longitude", "altitude", "speed", "heading"), as.name)
-  plots <- lapply(var.names, function(variable) {
+  return(lapply(lapply(variables, as.name), function(variable) {
     return(base.plot + eval(substitute(geom_point(aes(y=var)), list(var=variable))))
-  })
+  }))
+}
+
+timeline.plots <- function(data) {
+  plots <- separate.timeline.plots(data, c("latitude", "longitude", "altitude", "speed", "heading"))
   grid.arrange(do.call(arrangeGrob, plots[1:2]), do.call(arrangeGrob, plots[3:5]),
                ncol=2, main="GIS variables in selected time frame")
 }

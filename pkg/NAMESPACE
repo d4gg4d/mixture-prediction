@@ -5,7 +5,7 @@ importFrom(reshape2, acast, melt)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
 ## exporting methods implicitly exports the generic
 export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval)
-export(plotGisDistribution, timeline.plots)
+export(plotGisDistribution, separate.timeline.plots, timeline.plots)
 export(mixture.predict, features.extraction)
 
 ##exportClasses(mle, profile.mle, summary.mle)
