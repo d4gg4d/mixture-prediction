@@ -4,10 +4,10 @@ take.slice <- function(model, index) {
 };
 
 ##todo documentation
-create.datacube <- function(index, history.models) {
+create.datacube <- function(indeces, history.models) {
   ##todo for clarity rewrite this one 
   data <- data.frame();
-  for (i in max(1, index - 4) : index) {
+  for (i in indeces) {
     data <- rbind(data, cbind(ldply(history.models, take.slice, i), ID=i));
   };
   data$row <- 1:nrow(data) %% length(history.models);
@@ -20,12 +20,20 @@ create.datacube <- function(index, history.models) {
 #' history information which is encapulated to datacube which is its
 #' input.
 #' 
-#' @param index of validation data row for which final prediction is made
+#' @param time of validation data row for which final prediction is made
 #'
 #' @param mixture given mixture function that returns final latitude,longitude pair for given index
 #'
 #' @return final prediction of (latitude, longitude) pair.
 #' 
-mixture.internal <- function(index, mixture, history.models) {
-  return(mixture(create.datacube(index, history.models)));
+mixture.internal <- function(time, mixture, history.models, t.dist) {
+    indeces <- create.indeces(time, t.dist, take.times(history.models))
+    return(mixture(create.datacube(indeces, history.models)));
+}
+
+create.indeces <- function(time, t.dist, time.rows, n.hist=10) {
+    current <- which.min(abs(time.rows))
+    last.of.history <- which.min(abs(time.rows - t.dist))
+    histories <- max(1, last.of.history - n.hist) : current
+    return(c(histories,current))
 }

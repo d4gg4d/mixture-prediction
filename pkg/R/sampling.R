@@ -36,3 +36,9 @@ getSubSample <- function(data, sampleError = 0.03) {
 getClosestTo <- function(data, time) {
   return(data[which.min(abs(data$time - time)),])
 }
+
+take.times <- function(histories) {
+    return(laply(histories, function(el) {
+        return(el$time)
+    }))
+}
