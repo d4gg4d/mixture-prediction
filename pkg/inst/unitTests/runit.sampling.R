@@ -27,3 +27,15 @@ test.getBetween <- function() {
   checkEquals(getBetween(testFrame, as.POSIXct("1970-02-02"), as.POSIXct("1970-02-03")), testFrame[1:2,]);
   checkEquals(getBetween(testFrame, as.POSIXct("1970-02-03"), as.POSIXct("1970-02-04")), testFrame[2:3,]);
 }
+
+test.getClosestTo <- function() {
+    test <- data.frame(time=1:10)
+    checkEquals(getClosestTo(test, 4.2), 4)
+}
+
+test.takeTimes <- function() {
+    test.histories <- mapply(list,
+                             time=1:10,
+                             something=rep(0,10), SIMPLIFY=FALSE)
+    checkEquals(mixturePrediction:::take.times(test.histories), 1:10)
+}
