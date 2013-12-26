@@ -39,3 +39,8 @@ test.takeTimes <- function() {
                              something=rep(0,10), SIMPLIFY=FALSE)
     checkEquals(mixturePrediction:::take.times(test.histories), 1:10)
 }
+
+test.filterWithInterval <- function() {
+    test <- data.frame(time=c(2:10,10), a=c((2:10)*5,50))
+    checkEquals(mixturePrediction:::filterWithInterval(test, interval=2), data.frame(time=(2:5)*2,a=(2:5)*10))
+}
