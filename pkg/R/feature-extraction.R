@@ -9,8 +9,8 @@
 #'
 #' @return list of sliding windows, where prediction target is last row of the sliding window data.frame
 #' 
-slice.data <- function(data, time.dist, t.window.length) {
-  sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
+slice.data <- function(data, time.dist, t.window.length, interval=360) {
+  sliding.cursors <- cursors(data, time.dist, t.window.length, interval)
   return(alply(sliding.cursors, 1, function(row) {
     sliding.window <- getBetween(data, row$time - t.window.length, row$time)
     predicted.row <- getClosestTo(data, row$time + time.dist)
@@ -19,11 +19,15 @@ slice.data <- function(data, time.dist, t.window.length) {
 }
 
 ## todo documentation 
-extract.target.data <- function(data, time.dist, t.window.length) {
-  sliding.cursors <- getBetween(data, min(data$time) + as.numeric(time.dist + t.window.length), max(data$time) - time.dist)
+extract.target.data <- function(data, time.dist, t.window.length, interval=360) {
+  sliding.cursors <- cursors(data, time.dist, t.window.length, interval)
   return(adply(sliding.cursors, 1, function(row) {
     return(getClosestTo(data, row$time + time.dist))
   }, .expand=FALSE))
+}
+
+cursors <- function(data, time.dist, window.length, interval) {
+  return(filterWithInterval(getBetween(data, min(data$time) + as.numeric(time.dist + window.length), max(data$time) - time.dist), interval))
 }
 
 #' Extract feature from sliding windows. Given list of sliding
@@ -36,6 +40,7 @@ extract.target.data <- function(data, time.dist, t.window.length) {
 #'
 #' @return array of extracted features at given time
 #'
+#' TODO handle errors in fitting/prediction code
 feature.extraction <- function(feature, windows) {
 
   feature.fit <- function(data, target) {
