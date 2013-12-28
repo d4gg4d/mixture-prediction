@@ -28,7 +28,7 @@ create.datacube <- function(indeces, history.models) {
 #' 
 mixture.internal <- function(time, mixture, history.models, t.dist, hist.times) {
     indeces <- create.indeces(time, t.dist, hist.times)
-    return(mixture(create.datacube(indeces, history.models)));
+    return(cbind(time=time, mixture(create.datacube(indeces, history.models))));
 }
 
 ## todo documentation
