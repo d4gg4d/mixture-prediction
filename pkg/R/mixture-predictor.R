@@ -21,7 +21,7 @@
 #'
 #' @return dataframe of predicted values
 #' 
-mixture.predict <- function(features, trained.models, newdata, score.fn, mixture, t.dist, t.window.length) {
+mixture.predict <- function(features, trained.models, newdata, score.fn, mixture, t.dist, t.window.length, prediction.interval=360) {
 
   #' takes model pair and predicts values for each target.data row
   #'
@@ -52,9 +52,9 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
     return(score.fn(latitude, longitude, xvalid=target.data$latitude, yvalid=target.data$longitude, scale=5000)); #todo pass this parameter as input (...?)
   }
 
-  extracted.features <- features.extraction(features, newdata, t.dist, t.window.length);
-  predictions <- lapply(trained.models, predict.internal, target.data=extracted.features);
-  validation.data <- extract.target.data(newdata, t.dist, t.window.length)
+  extracted.features <- features.extraction(features, newdata, t.dist, t.window.length, interval=prediction.interval)
+  validation.data <- extract.target.data(newdata, t.dist, t.window.length, interval=prediction.interval)
+  predictions <- lapply(trained.models, predict.internal, target.data=extracted.features)
   prediction.validations <- lapply(predictions, validate.predictions, target.data=validation.data, score.fn=score.fn);
   histories <- mapply(list,
                       time=validation.data$time,

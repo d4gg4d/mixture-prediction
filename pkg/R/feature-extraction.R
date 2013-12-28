@@ -74,11 +74,11 @@ feature.extraction <- function(feature, windows) {
 #'
 #' @return dataframe where each feature is as its own column 
 #' 
-features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time")) {
-  dataslices <- slice.data(data, t.dist, t.window.length)
+features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time"), interval=360) {
+  dataslices <- slice.data(data, t.dist, t.window.length, interval=interval)
   fitted <- data.frame(t(laply(features, feature.extraction, dataslices)))
   kept <- ldply(dataslices, function(slice) {
-    return(slice[nrow(slice),names(data) %in% keep])
+    return(slice[nrow(slice), names(data) %in% keep])
   })[,-1]
   return(setNames(cbind(kept,fitted), c(keep, unlist(lapply(features, function(feature){ return(feature$name)})))))
 }

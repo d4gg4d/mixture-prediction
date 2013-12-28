@@ -35,10 +35,8 @@ mixture.internal <- function(time, mixture, history.models, t.dist, hist.times) 
 create.indeces <- function(time, t.dist, time.rows, n.hist=10) {
     times <- time.rows - time
     current <- which.min(abs(times))
-    if (current == 1) { #todo horrible...
-        return(current)
-    }
     last.of.history <- which.min(abs(times + t.dist))
     histories <- max(1, last.of.history - n.hist) : last.of.history
-    return(c(histories,current))
+    indeces <- c(histories,current)
+    return(indeces[!duplicated(indeces)])
 }
