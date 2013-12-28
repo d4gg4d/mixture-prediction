@@ -70,7 +70,7 @@ feature.extraction <- function(feature, windows) {
 #'
 #' @param t.window.length size of the sliding window in time units
 #'
-#' @param keep values that are kept from the original data and are combined with extracted features
+#' @param keep values that are kept from the original data and are combined with extracted features. Note: apparently keep column names must be in same order as in data...
 #'
 #' @return dataframe where each feature is as its own column 
 #' 
