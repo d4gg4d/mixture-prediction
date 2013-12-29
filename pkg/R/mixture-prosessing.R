@@ -27,6 +27,8 @@ create.datacube <- function(indeces, history.models) {
 #' @return final prediction of (latitude, longitude) pair.
 #' 
 mixture.internal <- function(time, mixture, history.models, t.dist, hist.times) {
+    test.counter <<- test.counter + 1 
+    print(paste("predicting ", test.counter))
     indeces <- create.indeces(time, t.dist, hist.times)
     return(cbind(time=time, mixture(create.datacube(indeces, history.models))));
 }

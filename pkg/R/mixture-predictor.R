@@ -61,5 +61,7 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
                       predictions=predictions,
                       history=prediction.validations,
                       SIMPLIFY=FALSE);
+  print(paste("predicted vectors: ", nrow(validation.data)))
+  test.counter <<- 0
   return(ldply(validation.data$time, mixture.internal, mixture, histories, t.dist=t.dist, hist.times=take.times(histories)));
 }
