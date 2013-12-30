@@ -61,5 +61,6 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
                       predictions=predictions,
                       history=prediction.validations,
                       SIMPLIFY=FALSE);
-  return(ldply(validation.data$time, mixture.internal, mixture, histories, t.dist=t.dist, hist.times=take.times(histories)));
+  final.output <- ldply(validation.data$time, mixture.internal, mixture, histories, t.dist=t.dist, hist.times=take.times(histories))
+  return(final.output[with(final.output, !duplicated(time)),])
 }
