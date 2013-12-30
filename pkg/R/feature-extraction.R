@@ -27,7 +27,9 @@ predicted.target.data <- function(data, time.dist, t.window.length, interval=360
 }
 
 cursors <- function(data, time.dist, window.length, interval) {
-  return(filterWithInterval(getBetween(data, min(data$time) + as.numeric(time.dist + window.length), max(data$time) - time.dist), interval))
+  vectors <- filterWithInterval(getBetween(data, min(data$time) + as.numeric(time.dist + window.length), max(data$time) - time.dist), interval)
+  stopifnot(!duplicated(vectors$time))
+  return(vectors)
 }
 
 #' Extract feature from sliding windows. Given list of sliding
