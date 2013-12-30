@@ -19,7 +19,7 @@ slice.data <- function(data, time.dist, t.window.length, interval=360) {
 }
 
 ## todo documentation 
-extract.target.data <- function(data, time.dist, t.window.length, interval=360) {
+predicted.target.data <- function(data, time.dist, t.window.length, interval=360) {
   sliding.cursors <- cursors(data, time.dist, t.window.length, interval)
   return(adply(sliding.cursors, 1, function(row) {
     return(getClosestTo(data, row$time + time.dist))

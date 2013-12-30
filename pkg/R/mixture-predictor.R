@@ -53,7 +53,7 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
   }
 
   extracted.features <- features.extraction(features, newdata, t.dist, t.window.length, interval=prediction.interval)
-  validation.data <- extract.target.data(newdata, t.dist, t.window.length, interval=prediction.interval)
+  validation.data <- predicted.target.data(newdata, t.dist, t.window.length, interval=prediction.interval)
   predictions <- lapply(trained.models, predict.internal, target.data=extracted.features)
   prediction.validations <- lapply(predictions, validate.predictions, target.data=validation.data, score.fn=score.fn);
   histories <- mapply(list,
