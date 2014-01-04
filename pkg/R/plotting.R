@@ -36,7 +36,7 @@ separate.timeline.plots <- function(data, variables) {
 }
 
 timeline.plots <- function(data) {
-  plots <- separate.timeline.plots(data, c("latitude", "longitude", "altitude", "speed", "heading"))
+  plots <- separate.timeline.plots(data, c("longitude", "latitude", "altitude", "speed", "heading"))
   grid.arrange(do.call(arrangeGrob, plots[1:2]), do.call(arrangeGrob, plots[3:5]),
                ncol=2, main="GIS variables in selected time frame")
 }
