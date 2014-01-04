@@ -40,3 +40,13 @@ timeline.plots <- function(data) {
   grid.arrange(do.call(arrangeGrob, plots[1:2]), do.call(arrangeGrob, plots[3:5]),
                ncol=2, main="GIS variables in selected time frame")
 }
+
+VisualizeExtraction <- function(features, data, t.dist=3*hours, t.window.length=2*days) {
+  test.extractions <- features.extraction(features, data, t.dist=t.dist, t.window.length=t.window.length)
+  attr(test.extractions, "time.origin") <- attr(data, "time.origin")
+
+  names <- names(test.extractions)
+  plots <- separate.timeline.plots(test.extractions, names[!names %in% "time"])
+  
+  grid.arrange(do.call(arrangeGrob, plots))
+}
