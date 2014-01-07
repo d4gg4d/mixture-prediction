@@ -35,7 +35,8 @@ cursors <- function(data, time.dist, window.length, interval) {
 
 #' Extract feature from sliding windows. Given list of sliding
 #' windows, feature is fitted to window data and then the fitted
-#' feature is used to predict its value at desired time.
+#' feature is used to predict its value at desired time. If feature
+#' fitting fails it results on NA for feature value.
 #' 
 #' @param feature feature to be fitted
 #'
@@ -43,14 +44,18 @@ cursors <- function(data, time.dist, window.length, interval) {
 #'
 #' @return array of extracted features at given time
 #'
-#' TODO handle errors in fitting/prediction code
 feature.extraction <- function(feature, windows) {
 
   feature.fit <- function(data, target) {
-    fitted.feature <- feature$fit(data)
-    ## todo or optionally with(sliding.window,{lm()}) via environment??
-    ## should this be called from feature, e.g. feature$predict?
-    return(predict(fitted.feature, newdata=target))
+    tryCatch(
+      {
+        fitted.feature <- feature$fit(data)
+        return(predict(fitted.feature, newdata=target))
+      },
+      error=function(e) {
+        print(paste("failed extract feature",feature$name,"for time",target$time, sep=" "))
+        return(NA)
+      })
   }
 
   return(laply(windows, function(sliding.window) {
