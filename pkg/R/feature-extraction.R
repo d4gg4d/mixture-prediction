@@ -80,9 +80,11 @@ feature.extraction <- function(feature, windows) {
 #'
 #' @param keep values that are kept from the original data and are combined with extracted features. Note: apparently keep column names must be in same order as in data...
 #'
+#' @param interval in which time steps will the feature extraction to be made of, default 1 hour.
+#' 
 #' @return dataframe where each feature is as its own column 
 #' 
-features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time"), interval=360) {
+features.extraction <- function(features, data, t.dist, t.window.length, keep=c("time"), interval=3600) {
   dataslices <- slice.data(data, t.dist, t.window.length, interval=interval)
   fitted <- data.frame(t(laply(features, feature.extraction, dataslices)))
   kept <- ldply(dataslices, function(slice) {
