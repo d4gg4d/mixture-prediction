@@ -50,3 +50,51 @@ VisualizeExtraction <- function(features, data, t.dist=3*hours, t.window.length=
   
   grid.arrange(do.call(arrangeGrob, plots))
 }
+
+PredictionError <- function(prediction, valid) {
+    valid.predicted <- valid[valid$time %in% prediction$time,]
+    valid.predicted <- valid.predicted[with(valid.predicted, order(time)),]
+    stopifnot(valid.predicted$time == prediction$time)
+    return(data.frame(
+      time=prediction$time,
+      longitude=prediction$longitude - valid.predicted$longitude,
+      latitude=prediction$latitude - valid.predicted$latitude))
+}
+
+PlotPredictionDiff <- function(prediction.data, valid.data) {
+  base.plot <- ggplot(PredictionError(prediction.data, valid.data))
+  time.range <- coord_cartesian(xlim=with(valid.data,as.POSIXct(c(min(time),max(time)), origin="1970-01-01")))
+  grid.arrange(arrangeGrob(
+    arrangeGrob(
+      base.plot + geom_histogram(aes(x=longitude), binwidth=0.01) + xlim(-0.15,0.15),
+      base.plot + geom_histogram(aes(x=latitude), binwidth=0.01) + xlim(-0.15,0.15),
+      main="Around Center"),
+    arrangeGrob(
+      base.plot + geom_histogram(aes(x=longitude), binwidth=0.01),
+      base.plot + geom_histogram(aes(x=latitude), binwidth=0.01),
+      main="Whole Data"),
+    ncol=2, main="Prediction Error Histograms"),
+               ggplot(valid.data) +
+               geom_point(aes(x=as.POSIXct(time, origin="1970-01-01"), y=longitude)) +
+               geom_point(data=prediction.data, aes(x=as.POSIXct(time, origin="1970-01-01"), y=longitude, colour="red")) +
+               time.range +
+               theme(legend.position="none", axis.title.x=element_blank()),
+               base.plot +
+               geom_point(aes(x=as.POSIXct(time, origin="1970-01-01"), y=longitude)) +
+               geom_hline(aes(yintercept=0, colour="red")) +
+               time.range +
+               theme(axis.title.x=element_blank()),
+
+               ggplot(valid.data) +
+               geom_point(aes(x=as.POSIXct(time, origin="1970-01-01"), y=latitude)) +
+               geom_point(data=prediction.data, aes(x=as.POSIXct(time, origin="1970-01-01"), y=latitude, colour="red")) +
+               time.range +
+               theme(legend.position="none", axis.title.x=element_blank()),
+               base.plot +
+               geom_point(aes(x=as.POSIXct(time, origin="1970-01-01"), y=latitude)) +
+               geom_hline(aes(yintercept=0, colour="red")) +
+               time.range +
+               theme(axis.title.x=element_blank()),
+
+               heights=c(4,2,1,2,1), ncol=1)
+}
