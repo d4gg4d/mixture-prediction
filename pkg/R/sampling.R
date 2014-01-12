@@ -1,4 +1,4 @@
-getRandomInterval <- function(data, length, months=1, days=0, hours=0) {
+getRandomInterval <- function(data, length=NULL, months=1, days=0, hours=0) {
   startDate <- as.POSIXlt(sample(data$time, size=1), origin=attr(data, "time.origin"));
   return(getFromInterval(startDate, data, length, months, days, hours));
 }
