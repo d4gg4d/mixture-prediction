@@ -4,9 +4,10 @@ importFrom(plyr, ldply)
 importFrom(reshape2, acast, melt)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
 ## exporting methods implicitly exports the generic
-export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval)
+export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval, PartitionHistoryData)
 export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeExtraction, PlotPredictionDiff)
 export(mixture.predict)
+export(lm.create.models, ModelPairing)
 export(features.extraction, create.lm.features)
 ##exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:

@@ -52,3 +52,8 @@ take.times <- function(histories) {
         return(el$time)
     }))
 }
+
+PartitionHistoryData <- function(data) {
+  sets <- split(data, f=1:2)
+  return(list(train=sets[[1]], valid=sets[[2]]))
+}
