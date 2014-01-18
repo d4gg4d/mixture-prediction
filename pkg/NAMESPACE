@@ -9,6 +9,7 @@ export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeEx
 export(mixture.predict)
 export(lm.create.models, ModelPairing)
 export(features.extraction, create.lm.features)
+export(PredictionError)
 ##exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:
 #exportMethods(coef, confint, logLik, plot, profile, summary, 
