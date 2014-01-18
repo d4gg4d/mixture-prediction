@@ -32,7 +32,7 @@ filterWithInterval <- function(data, interval=1) {
     start <- data$time[1]
     end <- data$time[nrow(data)]
     n.intervals <- (end - start) / interval + 1
-    rows <- ldply(1:n.intervals, function(i) {
+    rows <- ldply(0:n.intervals, function(i) {
         return(getClosestTo(data, start + i * interval))
     })
     return(rows[!duplicated(rows),])
