@@ -1,9 +1,9 @@
 getRandomInterval <- function(data, length=NULL, months=1, days=0, hours=0) {
   startDate <- as.POSIXlt(sample(data$time, size=1), origin=attr(data, "time.origin"));
-  return(getFromInterval(startDate, data, length, months, days, hours));
+  return(getFromInterval(data, startDate, length, months, days, hours));
 }
 
-getFromInterval <- function(startDate, data, length, months=1, days=0, hours=0) {
+getFromInterval <- function(data, startDate, length, months=1, days=0, hours=0) {
   toEnd <- function(date, months, days, hours) {
     .date <- date
     .date$mon <- endDate$mon + months;
@@ -20,7 +20,7 @@ getSampleOf <- function(data, size=10, portion=NULL) {
   return(data[sample(1:nrow(data), as.integer(sampleSize)),]);
 };
 
-filterUser <- function(id, data) {
+filterUser <- function(data, id) {
   return(data[data$userid == id,]);
 }
 

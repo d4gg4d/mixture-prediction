@@ -15,9 +15,9 @@ test.getSampleOf <- function() {
 test.filterUser <- function() {
   testFrame <- data.frame(userid=as.integer(1:10/2));
 
-  checkEquals(filterUser(6, testFrame), integer(0));
-  checkEquals(filterUser(5, testFrame), testFrame[10,]);
-  checkEquals(filterUser(1, testFrame), testFrame[2:3,]);
+  checkEquals(filterUser(testFrame, 6), integer(0));
+  checkEquals(filterUser(testFrame, 5), testFrame[10,]);
+  checkEquals(filterUser(testFrame, 1), testFrame[2:3,]);
 }
 
 test.getBetween <- function() {
