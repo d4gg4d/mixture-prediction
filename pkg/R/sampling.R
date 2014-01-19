@@ -53,7 +53,9 @@ take.times <- function(histories) {
     }))
 }
 
-PartitionHistoryData <- function(data) {
-  sets <- split(data, f=1:2)
-  return(list(train=sets[[1]], valid=sets[[2]]))
+PartitionHistoryData <- function(data, training.length) {
+  train.indx <- data$time < min(data$time) + training.length
+  training <- data[train.indx,]
+  valid <- data[!train.indx,]
+  return(list(train=training, valid=valid))
 }

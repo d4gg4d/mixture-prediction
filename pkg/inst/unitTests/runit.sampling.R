@@ -45,3 +45,12 @@ test.filterWithInterval <- function() {
     expected <- data.frame(time=c(2,(2:5)*2), a=c(10,(2:5)*10))
     checkEquals(mixturePrediction:::filterWithInterval(test, interval=2), expected)
 }
+
+test.PartitionHistoryData <- function() {
+    test <- data.frame(time=2:10, a=2:10)
+    expected <- list(train=data.frame(time=2:4, a=2:4), valid=data.frame(time=5:10, a=5:10))
+    #checkEquals(PartitionHistoryData(test, 3), expected) this complains about mean relative diff
+    checkEquals(PartitionHistoryData(test, 3)$train, expected$train)
+    checkEquals(PartitionHistoryData(test, 3)$valid$time, expected$valid$time)
+    checkEquals(PartitionHistoryData(test, 3)$valid$a, expected$valid$a)
+}
