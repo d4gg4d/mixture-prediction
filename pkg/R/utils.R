@@ -14,3 +14,18 @@ ModelPairing <- function(long.models, lat.models) {
 lm.create.models <- function(formulas, data) {
   return(lapply(formulas, lm, data=data));
 }
+
+## TODO documentation
+PredictionError <- function(prediction, valid, score.fn) {
+    valid.predicted <- valid[valid$time %in% prediction$time,]
+    valid.predicted <- valid.predicted[with(valid.predicted, order(time)),]
+    stopifnot(valid.predicted$time == prediction$time)
+    difference.long <- prediction$longitude - valid.predicted$longitude
+    difference.lat <- prediction$latitude - valid.predicted$latitude
+    score.value <- score.fn(prediction$longitude, valid.predicted$longitude, prediction$latitude, valid.predicted$latitude)
+    return(data.frame(
+      time=prediction$time,
+      longitude=difference.long,
+      latitude=difference.lat,
+      score=score.value))
+}

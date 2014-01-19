@@ -51,16 +51,6 @@ VisualizeExtraction <- function(features, data, t.dist=3*hours, t.window.length=
   grid.arrange(do.call(arrangeGrob, plots))
 }
 
-PredictionError <- function(prediction, valid) {
-    valid.predicted <- valid[valid$time %in% prediction$time,]
-    valid.predicted <- valid.predicted[with(valid.predicted, order(time)),]
-    stopifnot(valid.predicted$time == prediction$time)
-    return(data.frame(
-      time=prediction$time,
-      longitude=prediction$longitude - valid.predicted$longitude,
-      latitude=prediction$latitude - valid.predicted$latitude))
-}
-
 PlotPredictionDiff <- function(prediction.data, valid.data) {
   base.plot <- ggplot(PredictionError(prediction.data, valid.data))
   time.range <- coord_cartesian(xlim=with(valid.data,as.POSIXct(c(min(time),max(time)), origin="1970-01-01")))
