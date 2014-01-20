@@ -53,7 +53,7 @@ VisualizeExtraction <- function(features, data, t.dist=3*hours, t.window.length=
 
 PlotPredictionDiff <- function(prediction.data, valid.data) {
   base.plot <- ggplot(PredictionError(prediction.data, valid.data))
-  time.range <- coord_cartesian(xlim=with(valid.data,as.POSIXct(c(min(time),max(time)), origin="1970-01-01")))
+  time.range <- coord_cartesian(xlim=with(valid.data, as.POSIXct(c(min(time), max(time)), origin="1970-01-01")))
   grid.arrange(arrangeGrob(
     arrangeGrob(
       base.plot + geom_histogram(aes(x=longitude), binwidth=0.01) + xlim(-0.15,0.15),
