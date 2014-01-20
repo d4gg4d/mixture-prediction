@@ -47,6 +47,7 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
   #'
   #' @return value of score.fn applied to predicted and target.data
   validate.predictions <- function(predictions, target.data, score.fn) {
+    stopifnot(predictions$time == target.data$time)
     longitude <- predictions$longitude;
     latitude <- predictions$latitude;
     return(score.fn(longitude, latitude, xvalid=target.data$longitude, yvalid=target.data$latitude, scale=5000)); #todo pass this parameter as input (...?)

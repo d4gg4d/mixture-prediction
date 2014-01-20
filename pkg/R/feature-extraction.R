@@ -8,13 +8,12 @@
 #' @param t.window.length size of sliding window in time units
 #'
 #' @return list of sliding windows, where prediction target is last row of the sliding window data.frame
-#' todo filter duplicated predicted.row slices, because getClosestTo can retun same value on multiple inputs
+#'
 slice.data <- function(data, time.dist, t.window.length, interval=360) {
-  sliding.cursors <- cursors(data, time.dist, t.window.length, interval)
-  return(alply(sliding.cursors, 1, function(row) {
-    sliding.window <- getBetween(data, row$time - t.window.length, row$time)
-    predicted.row <- getClosestTo(data, row$time + time.dist)
-    return(rbind(sliding.window, predicted.row))
+  predicted.rows <- predicted.target.data(data, time.dist, t.window.length, interval=interval)
+  return(alply(predicted.rows, 1, function(row) {
+    sliding.window <- getBetween(data, row$time - t.window.length - time.dist, row$time - time.dist)
+    return(rbind(sliding.window, row))
   }, .expand=FALSE))
 }
 
@@ -22,9 +21,10 @@ slice.data <- function(data, time.dist, t.window.length, interval=360) {
 ## todo filter duplicated predicted.row slices, because getClosestTo can retun same value on multiple inputs
 predicted.target.data <- function(data, time.dist, t.window.length, interval=360) {
   sliding.cursors <- cursors(data, time.dist, t.window.length, interval)
-  return(adply(sliding.cursors, 1, function(row) {
-    return(getClosestTo(data, row$time + time.dist))
-  }, .expand=FALSE))
+  predicted.rows <- adply(sliding.cursors, 1, function(cursor) {
+    return(getClosestTo(data, cursor$time + time.dist))
+  })
+  return(predicted.rows[with(predicted.rows, !duplicated(time)),])
 }
 
 cursors <- function(data, time.dist, window.length, interval) {
