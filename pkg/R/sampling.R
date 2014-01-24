@@ -25,6 +25,7 @@ filterUser <- function(data, id) {
 }
 
 getBetween <- function(data, start, end) {
+  stopifnot(start < end)
   return(data[data$time >= as.numeric(start) & data$time <= as.numeric(end),]);
 }
 
