@@ -59,6 +59,5 @@ PredictInternal <- function(model.pair, target.data) {
 #' 
 #' TODO here be logic over multiple scoring functions 
 ValidatePredictions <- function(predictions, target.data, score.fn) {
-  stopifnot(predictions$time == target.data$time)
   return(score.fn(predictions, target.data))
 }

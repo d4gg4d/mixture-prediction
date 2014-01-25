@@ -62,5 +62,7 @@ PartitionHistoryData <- function(data, training.length) {
 }
 
 VectorsMatchingInTime <- function(vectors, times) {
-  return(vectors)
+  matched <- vectors
+  stopifnot(matched$time == times)
+  return(matched)
 }
