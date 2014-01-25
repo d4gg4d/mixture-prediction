@@ -21,12 +21,11 @@
 #'
 #' @return dataframe of predicted values
 #' 
-mixture.predict <- function(features, trained.models, newdata, score.fn, mixture, t.dist, t.window.length, prediction.interval=360) {
+MixturePredict <- function(features, trained.models, newdata, score.fn, mixture, t.dist, t.window.length, prediction.interval=360) {
 
-  extracted.features <- features.extraction(features, newdata, t.dist, t.window.length, interval=prediction.interval)
   validation.data <- predicted.target.data(newdata, t.dist, t.window.length, interval=prediction.interval)
-  predictions <- lapply(trained.models, predict.internal, target.data=extracted.features)
-  prediction.validations <- lapply(predictions, validate.predictions, target.data=validation.data, score.fn=score.fn);
+  predictions <- lapply(trained.models, PredictInternal, target.data=extracted.features)
+  prediction.validations <- lapply(predictions, ValidatePredictions, target.data=validation.data, score.fn=score.fn);
   histories <- mapply(list,
                       time=validation.data$time,
                       predictions=predictions,
@@ -43,7 +42,7 @@ mixture.predict <- function(features, trained.models, newdata, score.fn, mixture
 #' @param target.data extracted feature vectors to which predictions are made against
 #'
 #' @return prediction dataframe (rows of latitude,longitude pairs)
-predict.internal <- function(model.pair, target.data) {
+PredictInternal <- function(model.pair, target.data) {
   ##todo check if there are redundant df castings and namings here
   latitude <- data.frame(latitude=predict(model.pair$latitude, target.data));
   longitude <- data.frame(longitude=predict(model.pair$longitude, target.data));
@@ -59,7 +58,7 @@ predict.internal <- function(model.pair, target.data) {
 #' @param score.fn given function that takes in predicted vector and expected vector and returns scalar value for it
 #'
 #' @return value of score.fn applied to predicted and target.data
-validate.predictions <- function(predictions, target.data, score.fn) {
+ValidatePredictions <- function(predictions, target.data, score.fn) {
   stopifnot(predictions$time == target.data$time)
   longitude <- predictions$longitude;
   latitude <- predictions$latitude;
