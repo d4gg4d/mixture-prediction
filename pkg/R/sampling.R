@@ -60,3 +60,7 @@ PartitionHistoryData <- function(data, training.length) {
   valid <- data[!train.indx,]
   return(list(train=training, valid=valid))
 }
+
+VectorsMatchingInTime <- function(vectors, times) {
+  return(vectors)
+}

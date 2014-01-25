@@ -1,38 +1,36 @@
-#' main method. Uses features to construct feature extraction data
-#' rows for times corresponding to newdata rows times. Then does
-#' prediction of latitude,longitude pairs with trained models based on
-#' feature extration data (in which models are trained againts). Then
-#' calculates scoring of each prediction and uses mixture to decide
-#' which prediction is final output of the predictor.
+#' Predicts values for test data. Uses list of trained model pairs to
+#' predict values in testing data and makes selection based on given
+#' mixture.
 #'
-#' @param features list of feature extraction methods
-#'
-#' @param models list of trained model pairs that predict latitude,longitude values from feature extraction data
-#'
-#' @param newdata validation data which contains real values what predictor tries to predict
-#'
-#' @param score.fn scoring function that calculates validation value of a prediction
-#'
-#' @param mixture method that makes final selection based on known history (earlier predictions and their scoring value)
-#'
-#' @param t.dist time distance to last history window row which is used to calculate feature extraction values by fitting feature to it fit(last(history)$time + t.dist)
+#' @param trained.models list of trained model pairs that predict
+#' latitude,longitude values based feature.data, e.g. trained.models
+#' predictor variables must be sub set of feature.data variables
 #' 
-#' @param t.window.length size of the data frame in time units to which feature extractio is made
+#' @param mixture method that makes final selection from trained.model predictions
+#' 
+#' @param score.function scoring function that calculates validation
+#' value of a prediction from trained.models
+#'
+#' @param test.data validation data which contains real values what
+#' predictor tries to predict
 #'
 #' @return dataframe of predicted values
 #' 
-MixturePredict <- function(features, trained.models, newdata, score.fn, mixture, t.dist, t.window.length, prediction.interval=360) {
+MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data) {
 
-  validation.data <- predicted.target.data(newdata, t.dist, t.window.length, interval=prediction.interval)
-  predictions <- lapply(trained.models, PredictInternal, target.data=extracted.features)
-  prediction.validations <- lapply(predictions, ValidatePredictions, target.data=validation.data, score.fn=score.fn);
+  targets <- VectorsMatchingInTime(feature.data, test.data$time)
+  values <- lapply(trained.models, PredictInternal, target.data=targets)
+  validations <- ldply(values, ValidatePredictions, target.data=test.data, score.fn=score.function)
   histories <- mapply(list,
-                      time=validation.data$time,
-                      predictions=predictions,
-                      history=prediction.validations,
-                      SIMPLIFY=FALSE);
-  final.output <- ldply(validation.data$time, mixture.internal, mixture, histories, t.dist=t.dist, hist.times=take.times(histories))
-  return(final.output[with(final.output, !duplicated(time)),])
+                      time=targets$time,
+                      predictions=values,
+                      history=validations,
+                      SIMPLIFY=FALSE) ##TODO could this structure be simplified...?
+  MixtureProcess <- MixtureInternal(mixture)
+  
+  final.output <- ldply(targets$time, MixtureProcess, histories)
+  stopifnot(!duplicated(final.output$time))
+  return(final.output)
 }
 
 #' takes model pair and predicts values for each target.data row
@@ -44,8 +42,8 @@ MixturePredict <- function(features, trained.models, newdata, score.fn, mixture,
 #' @return prediction dataframe (rows of latitude,longitude pairs)
 PredictInternal <- function(model.pair, target.data) {
   ##todo check if there are redundant df castings and namings here
-  latitude <- data.frame(latitude=predict(model.pair$latitude, target.data));
-  longitude <- data.frame(longitude=predict(model.pair$longitude, target.data));
+  latitude <- data.frame(latitude = predict(model.pair$latitude, target.data));
+  longitude <- data.frame(longitude = predict(model.pair$longitude, target.data));
   return(cbind(latitude=latitude, longitude=longitude));
 }
 
@@ -58,9 +56,9 @@ PredictInternal <- function(model.pair, target.data) {
 #' @param score.fn given function that takes in predicted vector and expected vector and returns scalar value for it
 #'
 #' @return value of score.fn applied to predicted and target.data
+#' 
+#' TODO here be logic over multiple scoring functions 
 ValidatePredictions <- function(predictions, target.data, score.fn) {
   stopifnot(predictions$time == target.data$time)
-  longitude <- predictions$longitude;
-  latitude <- predictions$latitude;
-  return(score.fn(longitude, latitude, xvalid=target.data$longitude, yvalid=target.data$latitude, scale=5000)); #todo pass this parameter as input (...?)
+  return(score.fn(predictions, target.data))
 }
