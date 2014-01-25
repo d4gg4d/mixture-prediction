@@ -18,19 +18,24 @@
 #' 
 MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data) {
 
+  histories <- PredictionsAndValidations(trained.models, score.function, feature.data, test.data)
+  final.output <- MixtureInternal(mixture, histories)
+  stopifnot(!duplicated(final.output$time))
+  return(final.output)
+}
+
+#' @return history data structure. TODO could this structure be simplified...?
+#'
+#' proposal: data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
+#' 
+PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
   values <- lapply(trained.models, PredictInternal, target.data=targets)
   validations <- ldply(values, ValidatePredictions, target.data=test.data, score.fn=score.function)
-  histories <- mapply(list,
-                      time=targets$time,
+  return(mapply(list, time=targets$time,
                       predictions=values,
                       history=validations,
-                      SIMPLIFY=FALSE) ##TODO could this structure be simplified...?
-  MixtureProcess <- MixtureInternal(mixture)
-  
-  final.output <- ldply(targets$time, MixtureProcess, histories)
-  stopifnot(!duplicated(final.output$time))
-  return(final.output)
+                      SIMPLIFY=FALSE))
 }
 
 #' takes model pair and predicts values for each target.data row

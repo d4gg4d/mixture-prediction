@@ -20,15 +20,20 @@ create.datacube <- function(indeces, history.models) {
 #' history information which is encapulated to datacube which is its
 #' input.
 #' 
-#' @param time of validation data row for which final prediction is made
+#' @param mixture process that decides from inputted data which vector
+#' should be the final output
 #'
-#' @param mixture given mixture function that returns final latitude,longitude pair for given index
+#' @param history data.frame where each row represents output of one
+#' model pair
 #'
-#' @return final prediction of (latitude, longitude) pair.
+#' @return data.frame of final output for each target data
 #' 
-MixtureInternal <- function(time, mixture, history.models, t.dist, hist.times) {
+MixtureInternal <- function(mixture, history) {
+  ## TODO process whole data cube stuff...
+  return(function(time) {
     indeces <- create.indeces(time, t.dist, hist.times)
-    return(cbind(time=time, mixture(create.datacube(indeces, history.models))));
+    return(mixture(Datacube(indeces, history))) ##TODO remember to return time as well...
+  })
 }
 
 ## todo documentation
