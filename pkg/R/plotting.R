@@ -42,7 +42,7 @@ timeline.plots <- function(data) {
 }
 
 VisualizeExtraction <- function(features, data, t.dist=3*hours, t.window.length=2*days) {
-  test.extractions <- features.extraction(features, data, t.dist=t.dist, t.window.length=t.window.length)
+  test.extractions <- FeatureExtraction(features, data, t.dist=t.dist, t.window.length=t.window.length)
   attr(test.extractions, "time.origin") <- attr(data, "time.origin")
 
   names <- names(test.extractions)

@@ -3,13 +3,23 @@ importFrom(ggmap, qmap)
 importFrom(plyr, ldply)
 importFrom(reshape2, acast, melt)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
-## exporting methods implicitly exports the generic
+
+## sampling tools
 export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval, PartitionHistoryData)
+
+## plotting tools
 export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeExtraction, PlotPredictionDiff)
-export(MixturePredict)
-export(lm.create.models, ModelPairing)
-export(features.extraction, create.lm.features)
+
+## feature extraction tools
+export(FeatureExtraction, create.lm.features)
+
+## predition tools
+export(MixturePredict, ModelPairing, lm.create.models)
+
+## validation tools
 export(PredictionError)
+
+## exporting methods implicitly exports the generic
 ##exportClasses(mle, profile.mle, summary.mle)
 ## All methods for imported generics:
 #exportMethods(coef, confint, logLik, plot, profile, summary, 
