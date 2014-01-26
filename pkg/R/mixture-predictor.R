@@ -14,19 +14,24 @@
 #' @param test.data validation data which contains real values what
 #' predictor tries to predict
 #'
+#' @param t.dist timewise distance of predicted vector and history
+#' window that which it is going to be used.
+#'
+#' @param hist.length length in time where to gather history
+#' information.
+#'
 #' @return dataframe of predicted values
-#' 
-MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data) {
+#'
+MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data, t.dist, hist.length) {
 
   histories <- PredictionsAndValidations(trained.models, score.function, feature.data, test.data)
-  final.output <- MixtureInternal(mixture, histories)
+  final.output <- MixtureInternal(mixture, histories, t.dist, hist.length)
   stopifnot(!duplicated(final.output$time))
   return(final.output)
 }
 
-#' @return history data structure. TODO could this structure be simplified...?
 #'
-#' proposal: data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
+#' @return data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
 #' 
 PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
@@ -42,6 +47,7 @@ PredictionsAndValidations <- function(trained.models, score.function, feature.da
 #' @param target.data extracted feature vectors to which predictions are made against
 #'
 #' @return data.frame of (modelid, time, prediction1, prediction2)
+#' 
 PredictInternal <- function(trained.models, target.data) {
   predictions <- ldply(trained.models, function(model.pair) {
     latitude <- data.frame(latitude = predict(model.pair$latitude, target.data))
