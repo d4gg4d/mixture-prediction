@@ -33,13 +33,6 @@ test.getClosestTo <- function() {
     checkEquals(getClosestTo(test, 4.2), 4)
 }
 
-test.takeTimes <- function() {
-    test.histories <- mapply(list,
-                             time=1:10,
-                             something=rep(0,10), SIMPLIFY=FALSE)
-    checkEquals(mixturePrediction:::take.times(test.histories), 1:10)
-}
-
 test.filterWithInterval <- function() {
     test <- data.frame(time=c(2:10,10), a=c((2:10)*5,50))
     expected <- data.frame(time=c(2,(2:5)*2), a=c(10,(2:5)*10))

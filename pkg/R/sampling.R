@@ -15,11 +15,6 @@ getFromInterval <- function(data, startDate, length, months=1, days=0, hours=0) 
   return(getBetween(data, startDate, endDate));
 }
 
-getSampleOf <- function(data, size=10, portion=NULL) {
-  sampleSize <- ifelse(is.null(portion), size, portion*nrow(data))
-  return(data[sample(1:nrow(data), as.integer(sampleSize)),]);
-};
-
 filterUser <- function(data, id) {
   return(data[data$userid == id,]);
 }
@@ -39,6 +34,11 @@ filterWithInterval <- function(data, interval=1) {
     return(rows[!duplicated(rows),])
 }
 
+getSampleOf <- function(data, size=10, portion=NULL) {
+  sampleSize <- ifelse(is.null(portion), size, portion*nrow(data))
+  return(data[sample(1:nrow(data), as.integer(sampleSize)),])
+}
+
 getSubSample <- function(data, sampleError = 0.03) {
   n = as.integer(min(nrow(data), 1/(sampleError)^2));
   return(getSampleOf(data, size=n));
@@ -48,12 +48,6 @@ getClosestTo <- function(data, time) {
   return(data[which.min(abs(data$time - time)),])
 }
 
-take.times <- function(histories) {
-    return(laply(histories, function(el) {
-        return(el$time)
-    }))
-}
-
 PartitionHistoryData <- function(data, training.length) {
   train.indx <- data$time < min(data$time) + training.length
   training <- data[train.indx,]
@@ -61,6 +55,7 @@ PartitionHistoryData <- function(data, training.length) {
   return(list(train=training, valid=valid))
 }
 
+## TODO 
 VectorsMatchingInTime <- function(vectors, times) {
   matched <- vectors
   stopifnot(matched$time == times)

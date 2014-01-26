@@ -23,7 +23,6 @@
 #' @return dataframe of predicted values
 #'
 MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data, t.dist, hist.length) {
-
   histories <- PredictionsAndValidations(trained.models, score.function, feature.data, test.data)
   final.output <- MixtureInternal(mixture, histories, t.dist, hist.length)
   stopifnot(!duplicated(final.output$time))

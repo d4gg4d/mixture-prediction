@@ -24,7 +24,7 @@ FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=
     return(ldply(features, FeatureFit, data=history.window, target=prediction))
   })
   kept <- targets[, names(targets) %in% keep]
-  return(setNames(cbind(kept, fitted), c(keep, unlist(lapply(features, function(feature){ return(feature$name)})))))
+  return(setNames(cbind(kept, fitted), c(keep, unlist(lapply(features, function(feature){ return(feature$name) })))))
 }
 
 Cursors <- function(data, time.dist, window.length, interval) {
