@@ -30,12 +30,9 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
 #' 
 PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
-  values <- lapply(trained.models, PredictInternal, target.data=targets)
-  validations <- ldply(values, ValidatePredictions, target.data=test.data, score.fn=score.function)
-  return(mapply(list, time=targets$time,
-                      predictions=values,
-                      history=validations,
-                      SIMPLIFY=FALSE))
+  values <- PredictInternal(trained.models, targets)
+  validations <- ValidatePredictions(values, test.data, score.function)
+  return(cbind(values, validations))
 }
 
 #' takes model pair and predicts values for each target.data row
@@ -44,12 +41,14 @@ PredictionsAndValidations <- function(trained.models, score.function, feature.da
 #'
 #' @param target.data extracted feature vectors to which predictions are made against
 #'
-#' @return prediction dataframe (rows of latitude,longitude pairs)
-PredictInternal <- function(model.pair, target.data) {
-  ##todo check if there are redundant df castings and namings here
-  latitude <- data.frame(latitude = predict(model.pair$latitude, target.data));
-  longitude <- data.frame(longitude = predict(model.pair$longitude, target.data));
-  return(cbind(latitude=latitude, longitude=longitude));
+#' @return data.frame of (modelid, time, prediction1, prediction2)
+PredictInternal <- function(trained.models, target.data) {
+  predictions <- ldply(trained.models, function(model.pair) {
+    latitude <- data.frame(latitude = predict(model.pair$latitude, target.data))
+    longitude <- data.frame(longitude = predict(model.pair$longitude, target.data))
+    return(cbind(modelid=model.pair$id, time=target.data$time, latitude=latitude, longitude=longitude))
+  })
+  return(predictions)
 }
 
 #' takes predicted data.frame and calculates validation value(s) based on scoring function
