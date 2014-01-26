@@ -55,10 +55,8 @@ PartitionHistoryData <- function(data, training.length) {
   return(list(train=training, valid=valid))
 }
 
-## TODO 
 VectorsMatchingInTime <- function(vectors, times) {
-  matched <- vectors
-  stopifnot(matched$time == times)
+  matched <- vectors[with(vectors, time %in% times), ]
   return(matched)
 }
 

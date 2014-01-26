@@ -47,3 +47,19 @@ test.PartitionHistoryData <- function() {
     checkEquals(PartitionHistoryData(test, 3)$valid$time, expected$valid$time)
     checkEquals(PartitionHistoryData(test, 3)$valid$a, expected$valid$a)
 }
+
+test.VectorsMatchingInTime <- function() {
+  test <- data.frame(time=2:10, a=2:10)
+  matched.times <- 3:7
+  expected <- data.frame(time=3:7, a=3:7)
+  checkEquals(mixturePrediction:::VectorsMatchingInTime(test, matched.times)$time, expected$time)
+}
+
+test.VectorsMatchingInTimeInRandomOrder <- function() {
+  test <- data.frame(time=2:10, a=2:10)
+  test <- test[sample(nrow(test)), ]
+  matched.times <- 3:7
+  expected <- data.frame(time=3:7, a=3:7)
+  value <- mixturePrediction:::VectorsMatchingInTime(test, matched.times)
+  checkEquals(value[with(value, order(time)), ]$time, expected$time)
+}
