@@ -21,7 +21,7 @@ MixtureInternal <- function(Mixture, history, t.dist, hist.length) {
   times <- targets[with(targets, !duplicated(time)), ]$time
   values <- ldply(times, function(prediction.time) {
     prediction.candidates <- history[history$time == prediction.time, ]
-    history.window <- getBetween(history, prediction.time - t.dist - hist.length, prediction.time - t.dist)
+    history.window <- HistoryWindow(history, prediction.time - t.dist, hist.lenght)
     final.model.id <- Mixture(history.window, t.dist)
     return(prediction.candidates[prediction.candidates == final.model.id, ])
   })

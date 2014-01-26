@@ -66,3 +66,11 @@ VectorsMatchingInTime <- function(vectors, times) {
   stopifnot(matched$time == times)
   return(matched)
 }
+
+HistoryWindow <- function(data, end.time, window.length, sample.max.size=1111) {
+  history.window <- getBetween(data, end.time - window.length, end.time)
+  if (nrow(history.window) > sample.max.size) {
+    history.window <- getSampleOf(history.window, size=sample.max.size)
+  }
+  return(history.window)
+}
