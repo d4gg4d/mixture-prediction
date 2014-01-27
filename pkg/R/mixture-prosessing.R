@@ -23,7 +23,7 @@ MixtureInternal <- function(Mixture, history, t.dist, hist.length) {
     prediction.candidates <- history[history$time == prediction.time, ]
     history.window <- HistoryWindow(history, prediction.time - t.dist, hist.length)
     final.model.id <- Mixture(history.window, t.dist)
-    return(prediction.candidates[prediction.candidates == final.model.id, ])
+    return(prediction.candidates[prediction.candidates$modelid == final.model.id, ])
   })
   return(values)
 }

@@ -23,4 +23,3 @@ test.FeatureExtraction.failure.produces.NA <- function() {
   checkEquals(which(is.na(values$f.a)), 1:40)
   checkTrue(all(!is.na(values$f.b)))
 }
-## test.FeatureExtraction.failure.produces.NA()
