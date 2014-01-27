@@ -21,14 +21,18 @@ FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=
   targets <- Cursors(data, t.dist, t.window.length, interval)
   fitted <- adply(targets, 1, function(prediction) {
     history.window <- HistoryWindow(data, prediction$time - t.dist, t.window.length, sample.max.size=maximum.sample)
-    return(ldply(features, FeatureFit, data=history.window, target=prediction))
+    return(laply(features, FeatureFit, data=history.window, target=prediction))
   })
-  kept <- targets[, names(targets) %in% keep]
-  return(setNames(cbind(kept, fitted), c(keep, unlist(lapply(features, function(feature){ return(feature$name) })))))
+  feature.names <- sapply(features, function(f) { return(f$name)})
+  fitted <- setNames(fitted, c(names(targets), feature.names))
+  to.keep <- c(keep, feature.names)
+  return(fitted[, names(fitted) %in% to.keep])
 }
 
 Cursors <- function(data, time.dist, window.length, interval) {
-  vectors <- filterWithInterval(getBetween(data, min(data$time) + as.numeric(time.dist + window.length), max(data$time) - time.dist), interval)
+  start <- min(data$time) + as.numeric(time.dist + window.length)
+  end <- max(data$time)
+  vectors <- filterWithInterval(getBetween(data, start, end), interval)
   stopifnot(!duplicated(vectors$time))
   return(vectors)
 }
