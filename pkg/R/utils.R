@@ -5,9 +5,9 @@ create.lm.features <- function(formulas, names) {
 }
 
 ## TODO documentation
-ModelPairing <- function(long.models, lat.models) {
+ModelPairing <- function(ids, long.models, lat.models) {
   stopifnot(length(long.models) == length(lat.models))
-  return(mapply(list, longitude=long.models, latitude=lat.models, SIMPLIFY=FALSE));
+  return(mapply(list, modelid=ids, longitude=long.models, latitude=lat.models, SIMPLIFY=FALSE));
 }
 
 ## TODO documentation

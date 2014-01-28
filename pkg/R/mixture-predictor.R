@@ -51,7 +51,7 @@ PredictInternal <- function(trained.models, target.data) {
   predictions <- ldply(trained.models, function(model.pair) {
     latitude <- data.frame(latitude = predict(model.pair$latitude, target.data))
     longitude <- data.frame(longitude = predict(model.pair$longitude, target.data))
-    return(cbind(modelid=model.pair$id, time=target.data$time, latitude=latitude, longitude=longitude))
+    return(cbind(modelid=rep(model.pair$modelid, nrow(target.data)), time=target.data$time, latitude=latitude, longitude=longitude))
   })
   return(predictions)
 }
