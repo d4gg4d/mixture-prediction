@@ -1,5 +1,5 @@
 Package: mixturePrediction
-Version: 0.1
+Version: 0.2
 Date: 2013-10-27
 Title: Prediction analysis with Mixture Modelling
 Authors@R: c(person("Sami", "Airaksinen", role = c("aut", "cre"),
