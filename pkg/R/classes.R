@@ -9,3 +9,7 @@ fit.featurelm <- function(x, data, ...) {
 failure.featurelm <- function(x, ...) {
   return(NA)
 }
+
+name.featurelm <- function(x, ...) {
+  return(x$name)
+}

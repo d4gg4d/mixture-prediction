@@ -13,3 +13,11 @@ fit <- function(x, ...) {
 failure <- function(x, ...) {
   UseMethod("failure")
 }
+
+#' Interfacing name retrieval for feature
+#'
+#' @return values that represent extracted features
+#' 
+name <- function(x, ...) {
+  UseMethod("name")
+}
