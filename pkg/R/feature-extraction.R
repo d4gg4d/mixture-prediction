@@ -40,11 +40,11 @@ Cursors <- function(data, time.dist, window.length, interval) {
 FeatureFit <- function(feature, data, target) {
   tryCatch(
     {
-      fitted.feature <- feature$fit(data)
-      return(predict(fitted.feature, newdata=target))
+      browser()
+      return(predict(fit(feature, data=data), newdata=target))
     },
     error=function(e) {
       print(paste("failed extract feature", feature$name, "for time", target$time, sep=" "))
-      return(NA)
+      return(failure(feature))
     })
 }

@@ -1,7 +1,9 @@
 ## TODO documentation
 create.lm.features <- function(formulas, names) {
   stopifnot(length(formulas) == length(names))
-  return(mapply(list, fit=lapply(formulas, function(formula) {return(eval(substitute(function(data) {return(lm(ff, data))}, list(ff=formula))))}), name=names, SIMPLIFY=FALSE))
+  return(llply(mapply(list, formula=formulas, name=names, SIMPLIFY=FALSE), function(val) {
+    return(featurelm(val$formula, val$name))
+  }))
 }
 
 ## TODO documentation

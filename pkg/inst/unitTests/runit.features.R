@@ -1,8 +1,9 @@
 if (TRUE) {
   detach("package:mixturePrediction", unload=TRUE)
   library(mixturePrediction)
+  library(RUnit)
 }
-  
+
 test.FeatureExtraction <- function() {
   test.frame <- data.frame(time=1:100, a=sample(100), b=sample(100))
   test.features <- create.lm.features(c(a ~ time, b ~ time), c("f.a","f.b"))
@@ -19,7 +20,6 @@ test.FeatureExtraction.failure.produces.NA <- function() {
   checkEquals(nrow(values), 85)
   checkEquals(min(values$time), 16)
   checkEquals(max(values$time), 100)
-  browser()
   checkEquals(which(is.na(values$f.a)), 1:40)
   checkTrue(all(!is.na(values$f.b)))
 }
