@@ -40,7 +40,6 @@ Cursors <- function(data, time.dist, window.length, interval) {
 FeatureFit <- function(feature, data, target) {
   tryCatch(
     {
-      browser()
       return(predict(fit(feature, data=data), newdata=target))
     },
     error=function(e) {
