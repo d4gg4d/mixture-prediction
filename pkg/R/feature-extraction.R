@@ -21,9 +21,9 @@ FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=
   targets <- Cursors(data, t.dist, t.window.length, interval)
   fitted <- adply(targets, 1, function(prediction) {
     history.window <- HistoryWindow(data, prediction$time - t.dist, t.window.length, sample.max.size=maximum.sample)
-    return(laply(features, FeatureFit, data=history.window, target=prediction))
+    return(unlist(llply(features, FeatureFit, data=history.window, target=prediction)))
   })
-  feature.names <- unlist(sapply(features, function(f) { return(name(f))}))
+  feature.names <- unlist(llply(features, function(f) { return(name(f))}))
   fitted <- setNames(fitted, c(names(targets), feature.names))
   to.keep <- c(keep, feature.names)
   return(fitted[, names(fitted) %in% to.keep])
