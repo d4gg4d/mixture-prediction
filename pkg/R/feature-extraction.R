@@ -43,7 +43,7 @@ FeatureFit <- function(feature, data, target) {
       return(predict(fit(feature, data=data), newdata=target))
     },
     error=function(e) {
-      print(paste("failed extract feature", feature$name, "for time", target$time, sep=" "))
+      print(paste("failed extract feature", feature$name, "for time", target$time, ". Cause:", e, sep=" "))
       return(failure(feature))
     })
 }
