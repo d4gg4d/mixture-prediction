@@ -5,14 +5,17 @@
 #' @param trained.models list of trained model pairs that predict
 #' latitude,longitude values based feature.data, e.g. trained.models
 #' predictor variables must be sub set of feature.data variables
-#' 
+#'
 #' @param mixture method that makes final selection from trained.model predictions
-#' 
+#'
 #' @param score.function scoring function that calculates validation
 #' value of a prediction from trained.models
 #'
+#' @param feature.data data.frame rows matched in time against
+#' test.data and used to predict values with trained.models
+#'
 #' @param test.data validation data which contains real values what
-#' predictor tries to predict
+#' predictor tries to predict.
 #'
 #' @param t.dist timewise distance of predicted vector and history
 #' window that which it is going to be used.
@@ -29,9 +32,21 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
   return(final.output)
 }
 
+#' @param trained.models list of trained model pairs that predict
+#' latitude,longitude values based feature.data, e.g. trained.models
+#' predictor variables must be sub set of feature.data variables
+#'
+#' @param score.function scoring function that calculates validation
+#' value of a prediction from trained.models
+#'
+#' @param feature.data data.frame rows matched in time against
+#' test.data and used to predict values with trained.models
+#'
+#' @param test.data validation data which contains real values what
+#' predictor tries to predict.
 #'
 #' @return data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
-#' 
+#'
 PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
   values <- PredictInternal(trained.models, targets)
