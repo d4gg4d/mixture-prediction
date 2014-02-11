@@ -3,7 +3,7 @@ if (TRUE) {
   library(mixturePrediction)
 }
 
-test.MixtureInternal.gives.proper.data.frame.to.mixtureMethod <- function() {
+test.MixtureSelection.gives.proper.data.frame.to.mixtureMethod <- function() {
   test <- data.frame(time=as.integer(2:101/2),
                      modelid=rep(c("a1","b2"), 50),
                      a=sample(100),
@@ -15,7 +15,7 @@ test.MixtureInternal.gives.proper.data.frame.to.mixtureMethod <- function() {
     checkTrue(max(hist$time) - min(hist$time) == 10)
     return("b2")
   }
-  values <- mixturePrediction:::MixtureInternal(mixture.assert, test, 5, 10)
+  values <- MixtureSelection(mixture.assert, test, 5, 10)
   browser()
   checkEquals(nrow(values), 35)
 }

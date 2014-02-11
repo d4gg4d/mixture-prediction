@@ -27,7 +27,7 @@
 #'
 MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data, t.dist, hist.length) {
   histories <- PredictionsAndValidations(trained.models, score.function, feature.data, test.data)
-  final.output <- MixtureInternal(mixture, histories, t.dist, hist.length)
+  final.output <- MixtureSelection(mixture, histories, t.dist, hist.length)
   stopifnot(!duplicated(final.output$time))
   return(final.output)
 }
@@ -104,7 +104,7 @@ ValidatePredictions <- function(predictions, target.data, score.fn) {
 #' 
 #' @return data.frame of final output for each target data
 #' 
-MixtureInternal <- function(Mixture, history, t.dist, hist.length) {
+MixtureSelection <- function(Mixture, history, t.dist, hist.length) {
   targets <- getBetween(history, min(history$time) + t.dist + hist.length, max(history$time))
   times <- targets[with(targets, !duplicated(time)), ]$time
   values <- ldply(times, function(prediction.time) {
