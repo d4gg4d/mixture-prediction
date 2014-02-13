@@ -21,3 +21,18 @@ failure <- function(x, ...) {
 name <- function(x, ...) {
   UseMethod("name")
 }
+
+#'
+#' @param x class to contain function parameters
+#'
+#' @param predictions data.frame of predictions
+#'
+#' @param validations data.frame of real values, one2one match for
+#' prediction values
+#' 
+#' @return vector of scoring for predictions based on validation
+#' data.
+#' 
+validate <- function(x, predictions, validations, ...) {
+  UseMethod("validate")
+}

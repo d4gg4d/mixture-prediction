@@ -83,7 +83,7 @@ PredictInternal <- function(trained.models, target.data) {
 #' 
 #' TODO here be logic over multiple scoring functions 
 ValidatePredictions <- function(predictions, target.data, score.fn) {
-  return(score.fn(predictions, target.data))
+  return(validate(score.fn, predictions, target.data))
 }
 
 #' Method for doing final decision about prediction result. It can use

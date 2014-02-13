@@ -17,6 +17,9 @@ export(FeatureExtraction, create.lm.features)
 export(ModelPairing, lm.create.models)
 export(MixturePredict, PredictionsAndValidations, MixtureSelection)
 
+## scoring tools
+export(scoreFn)
+
 ## validation tools
 export(PredictionError)
 
