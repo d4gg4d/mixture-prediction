@@ -14,7 +14,6 @@ export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeEx
 export(FeatureExtraction, create.lm.features)
 
 ## predition tools
-export(ModelPairing, lm.create.models)
 export(MixturePredict, PredictionsAndValidations, MixtureSelection)
 
 ## scoring tools

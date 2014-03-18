@@ -7,17 +7,6 @@ create.lm.features <- function(formulas, names) {
 }
 
 ## TODO documentation
-ModelPairing <- function(ids, long.models, lat.models) {
-  stopifnot(length(long.models) == length(lat.models))
-  return(mapply(list, modelid=ids, longitude=long.models, latitude=lat.models, SIMPLIFY=FALSE));
-}
-
-## TODO documentation
-lm.create.models <- function(formulas, data) {
-  return(lapply(formulas, lm, data=data));
-}
-
-## TODO documentation
 PredictionError <- function(prediction, valid, score.fn=NULL) {
     valid.predicted <- valid[valid$time %in% prediction$time,]
     valid.predicted <- valid.predicted[with(valid.predicted, !duplicated(time)),]
