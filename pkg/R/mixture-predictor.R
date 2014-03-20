@@ -50,8 +50,8 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
 PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
   values <- PredictInternal(trained.models, targets)
-  validations <- ValidatePredictions(values, test.data, score.function)
-  return(cbind(values, validations))
+  values.with.validations <- ValidatePredictions(values, targets, score.function)
+  return(values.with.validations)
 }
 
 #' takes model pair and predicts values for each target.data row
@@ -61,14 +61,11 @@ PredictionsAndValidations <- function(trained.models, score.function, feature.da
 #' @param target.data extracted feature vectors to which predictions are made against
 #'
 #' @return data.frame of (modelid, time, prediction1, prediction2)
-#' 
+#'
 PredictInternal <- function(trained.models, target.data) {
-  predictions <- ldply(trained.models, function(model.pair) {
-    latitude <- data.frame(latitude = predict(model.pair$latitude, target.data))
-    longitude <- data.frame(longitude = predict(model.pair$longitude, target.data))
-    return(cbind(modelid=rep(model.pair$modelid, nrow(target.data)), time=target.data$time, latitude=latitude, longitude=longitude))
-  })
-  return(predictions)
+  return(ldply(trained.models, function(model) {
+    return(data.frame(time=target.data$time, predict(model, target.data)))
+  }))
 }
 
 #' takes predicted data.frame and calculates validation value(s) based on scoring function
@@ -79,11 +76,16 @@ PredictInternal <- function(trained.models, target.data) {
 #'
 #' @param score.fn given function that takes in predicted vector and expected vector and returns scalar value for it
 #'
-#' @return value of score.fn applied to predicted and target.data
+#' @return predictions data with column of value of score.fn applied to predicted and target.data
 #' 
 #' TODO here be logic over multiple scoring functions 
 ValidatePredictions <- function(predictions, target.data, score.fn) {
-  return(validate(score.fn, predictions, target.data))
+  return(ddply(predictions, ~ .id, function(model.predictions) {
+    predictions.over.model <- validate(score.fn, model.predictions, target.data)
+    model.predictions$pred <- predictions.over.model
+    colnames(model.predictions)[which(names(model.predictions) == "pred")] <- name(score.fn)
+    return(model.predictions)
+  }))
 }
 
 #' Method for doing final decision about prediction result. It can use
