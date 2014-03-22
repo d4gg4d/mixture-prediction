@@ -20,8 +20,7 @@ test.create.proper.history <- function() {
     model1=list(a=lm(a ~ time, test[1:30,]), b=lm(b ~ time, test[1:30,])),
     model2=list(a=lm(a ~ time, test[1:30,]), b=lm(b ~ time, test[1:30,])))
   values <- mixturePrediction:::PredictionsAndValidations(test.models, score.fn, test, test.validation)
-  browser()
-  checkEquals(length(colnames(values)), 5)
+  checkEquals(colnames(values), c(".id","time","a","b","foo"))
   checkEquals(nrow(values), 20)
   checkTrue(all(values$validations > 0))
 }
