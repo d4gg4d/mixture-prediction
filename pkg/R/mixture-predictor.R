@@ -32,9 +32,9 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
   return(final.output)
 }
 
-#' @param trained.models list of trained model pairs that predict
-#' latitude,longitude values based feature.data, e.g. trained.models
-#' predictor variables must be sub set of feature.data variables
+#' @param trained.models named list of trained models that predict
+#' values based feature.data, e.g. trained.models predictor variables
+#' must be sub set of feature.data variables
 #'
 #' @param score.function scoring function that calculates validation
 #' value of a prediction from trained.models
@@ -48,6 +48,7 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
 #' @return data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
 #'
 PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
+  stopifnot(!is.null(names(trained.models)))
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
   values <- PredictInternal(trained.models, targets)
   values.with.validations <- ValidatePredictions(values, targets, score.function)
@@ -56,7 +57,7 @@ PredictionsAndValidations <- function(trained.models, score.function, feature.da
 
 #' takes model pair and predicts values for each target.data row
 #'
-#' @param model.pair a list of models that contain trained model for latitude and longitude
+#' @param trained.models list of models that contain trained model
 #'
 #' @param target.data extracted feature vectors to which predictions are made against
 #'
