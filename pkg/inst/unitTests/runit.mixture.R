@@ -5,7 +5,7 @@ if (TRUE) {
 
 test.MixtureSelection.gives.proper.data.frame.to.mixtureMethod <- function() {
   test <- data.frame(time=as.integer(2:101/2),
-                     modelid=rep(c("a1","b2"), 50),
+                     .id=rep(c("a1","b2"), 50),
                      a=sample(100),
                      b=sample(100))
   checkEquals(nrow(test), 100)
