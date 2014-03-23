@@ -15,7 +15,7 @@ test.MixtureSelection.gives.proper.data.frame.to.mixtureMethod <- function() {
     checkTrue(max(hist$time) - min(hist$time) == 10)
     return("b2")
   }
-  values <- MixtureSelection(mixture.assert, test, 5, 10)
+  values <- MixtureSelection(mixture.assert, test, 5, 10, c("a","b"))
   browser()
   checkEquals(nrow(values), 35)
 }
