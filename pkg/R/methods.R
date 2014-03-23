@@ -36,3 +36,21 @@ name <- function(x, ...) {
 validate <- function(x, predictions, validations, ...) {
   UseMethod("validate")
 }
+
+#'
+#' @param mixture class that implements method mixture or a mixture function
+#'
+#' @param history data.frame consisting validation values from some
+#' time range. history is a form of: data.frame(.id, time, validation1, validation2, ...)
+#'
+#' @param t.dist temporal distance of to be selected value and history windows last value.
+#'
+#' @return id of selected model.
+#' 
+select <- function(mixture, history, t.dist, ...) {
+  if (class(mixture) == "function") {
+    mixture(history, t.dist)
+  } else {
+    UseMethod("mixture")
+  }
+}

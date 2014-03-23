@@ -107,13 +107,13 @@ ValidatePredictions <- function(predictions, target.data, score.fn) {
 #' 
 #' @return data.frame of final output for each target data
 #' 
-MixtureSelection <- function(Mixture, history, t.dist, hist.length) {
+MixtureSelection <- function(mixture, history, t.dist, hist.length) {
   targets <- getBetween(history, min(history$time) + t.dist + hist.length, max(history$time))
   times <- targets[with(targets, !duplicated(time)), ]$time
   values <- ldply(times, function(prediction.time) {
     prediction.candidates <- history[history$time == prediction.time, ]
     history.window <- HistoryWindow(history, prediction.time - t.dist, hist.length)
-    final.model.id <- Mixture(history.window, t.dist)
+    final.model.id <- select(mixture, history.window, t.dist)
     return(prediction.candidates[prediction.candidates$.id == final.model.id, ])
   })
   return(values)
