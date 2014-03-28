@@ -27,7 +27,7 @@
 #'
 MixturePredict <- function(trained.models, mixture, score.function, feature.data, test.data, t.dist, hist.length) {
   histories <- PredictionsAndValidations(trained.models, score.function, feature.data, test.data)
-  validation.columns <- llply(score.function, name)
+  validation.columns <- llply(list(score.function), function(el) { return(name(el)) })
   final.output <- MixtureSelection(mixture, histories, t.dist, hist.length, validation.columns)
   stopifnot(!duplicated(final.output$time))
   return(final.output)
