@@ -5,7 +5,7 @@ importFrom(reshape2, acast, melt)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
 
 ## sampling tools
-export(getSampleOf, getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval, PartitionHistoryData, VectorsMatchingInTime)
+export(getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, getFromInterval, PartitionHistoryData, VectorsMatchingInTime)
 
 ## plotting tools
 export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeExtraction, PlotPredictionDiff)
