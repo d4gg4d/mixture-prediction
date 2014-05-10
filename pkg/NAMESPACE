@@ -11,7 +11,7 @@ export(getSubSample, filterUser, getBetween, getClosestTo, getRandomInterval, ge
 export(plotGisDistribution, separate.timeline.plots, timeline.plots, VisualizeExtraction, PlotPredictionDiff)
 
 ## feature extraction tools
-export(FeatureExtraction, create.lm.features)
+export(FeatureExtraction)
 
 ## predition tools
 export(MixturePredict, PredictionsAndValidations, MixtureSelection)

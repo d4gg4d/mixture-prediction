@@ -1,12 +1,4 @@
 ## TODO documentation
-create.lm.features <- function(formulas, names) {
-  stopifnot(length(formulas) == length(names))
-  return(llply(mapply(list, formula=formulas, name=names, SIMPLIFY=FALSE), function(val) {
-    return(featurelm(val$formula, val$name))
-  }))
-}
-
-## TODO documentation
 PredictionError <- function(prediction, valid, score.fn=NULL) {
     valid.predicted <- valid[valid$time %in% prediction$time,]
     valid.predicted <- valid.predicted[with(valid.predicted, !duplicated(time)),]
