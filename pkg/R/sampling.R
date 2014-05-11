@@ -36,7 +36,7 @@ filterWithInterval <- function(data, interval=1) {
 
 getSampleOf <- function(data, size=10, portion=NULL) {
   data.size <- nrow(data)
-  sampleSize <- max(ifelse(is.null(portion), size, portion*data.size), data.size)
+  sampleSize <- min(ifelse(is.null(portion), size, portion*data.size), data.size)
   return(data[sample(1:nrow(data), as.integer(sampleSize)),])
 }
 
