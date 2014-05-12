@@ -13,20 +13,15 @@
 #'
 #' @param interval in which time steps will the feature extraction to be made of, default 1 hour.
 #' 
-#' @param keep values that are kept from the original data and are combined with extracted features. Note: apparently keep column names must be in same order as in data...
+#' @return dataframe where each feature is added to it as a column
 #' 
-#' @return dataframe where each feature is as its own column 
-#' 
-FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=3600, keep=c("time"), maximum.sample=1111) {
+FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=3600, maximum.sample=1111) {
   targets <- Cursors(data, t.dist, t.window.length, interval)
   fitted <- adply(targets, 1, function(prediction) {
     history.window <- HistoryWindow(data, prediction$time - t.dist, t.window.length, sample.max.size=maximum.sample)
     return(unlist(llply(features, FeatureFit, data=history.window, target=prediction)))
   })
-  feature.names <- unlist(llply(features, function(f) { return(name(f))}))
-  fitted <- setNames(fitted, c(names(targets), feature.names))
-  to.keep <- c(keep, feature.names)
-  return(fitted[, names(fitted) %in% to.keep])
+  return(fitted)
 }
 
 Cursors <- function(data, time.dist, window.length, interval) {
