@@ -25,8 +25,9 @@ FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=
 }
 
 Cursors <- function(data, time.dist, window.length, interval) {
-  start <- min(data$time) + as.numeric(time.dist + window.length)
-  end <- max(data$time)
+  data.range <- range(data$time)
+  start <- data.range[1] + as.numeric(time.dist + window.length)
+  end <- data.range[2]
   vectors <- filterWithInterval(getBetween(data, start, end), interval)
   stopifnot(!duplicated(vectors$time))
   return(vectors)

@@ -21,17 +21,13 @@ filterUser <- function(data, id) {
 
 getBetween <- function(data, start, end) {
   stopifnot(start <= end)
-  return(data[data$time >= as.numeric(start) & data$time <= as.numeric(end),]);
+  return(subset(data, time >= start & time < end))
 }
 
-filterWithInterval <- function(data, interval=1) {
-    start <- data$time[1]
-    end <- data$time[nrow(data)]
-    n.intervals <- (end - start) / interval + 1
-    rows <- ldply(0:n.intervals, function(i) {
-        return(getClosestTo(data, start + i * interval))
-    })
-    return(rows[!duplicated(rows),])
+filterWithInterval <- function(data, interval) {
+    minimas <- (data$time - min(data$time)) %% interval
+    picked.indeces <- c(0, minimas[-length(minimas)]) > minimas & minimas <= c(minimas[-1],0)
+    return(data[picked.indeces, ])
 }
 
 getSampleOf <- function(data, size=10, portion=NULL) {
