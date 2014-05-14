@@ -21,12 +21,12 @@ filterUser <- function(data, id) {
 
 getBetween <- function(data, start, end) {
   stopifnot(start <= end)
-  return(subset(data, time >= start & time < end))
+  return(subset(data, time >= start & time <= end))
 }
 
 filterWithInterval <- function(data, interval) {
     minimas <- (data$time - min(data$time)) %% interval
-    picked.indeces <- c(0, minimas[-length(minimas)]) > minimas & minimas <= c(minimas[-1],0)
+    picked.indeces <- c(Inf, minimas[-length(minimas)]) >= minimas & minimas < c(minimas[-1], Inf)
     return(data[picked.indeces, ])
 }
 

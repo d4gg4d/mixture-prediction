@@ -1,15 +1,15 @@
-if(FALSE) {
-  ## Not really needed, but can be handy when writing tests
-  library("RUnit")
-  library("mixturePrediction")
+if (FALSE) {
+  detach("package:mixturePrediction", unload=TRUE)
+  library(mixturePrediction)
+  library(RUnit)
 }
 
 test.getSampleOf <- function() {
   testSample <- data.frame(rep(1,10));
 
-  checkEquals(getSampleOf(testSample, portion=0.2), c(1,1));
-  checkEquals(getSampleOf(testSample, size=1), c(1));
-  checkEquals(getSampleOf(testSample, size=1, portion=0.2), c(1,1));
+  checkEquals(mixturePrediction:::getSampleOf(testSample, portion=0.2), c(1,1));
+  checkEquals(mixturePrediction:::getSampleOf(testSample, size=1), c(1));
+  checkEquals(mixturePrediction:::getSampleOf(testSample, size=1, portion=0.2), c(1,1));
 }
 
 test.filterUser <- function() {
@@ -21,11 +21,11 @@ test.filterUser <- function() {
 }
 
 test.getBetween <- function() {
-  testFrame <- data.frame(time=c(as.numeric(as.POSIXct("1970-02-02")), as.numeric(as.POSIXct("1970-02-03")), as.numeric(as.POSIXct("1970-02-04"))));
+  test.frame <- data.frame(time=c(as.numeric(as.POSIXct("1970-02-02")), as.numeric(as.POSIXct("1970-02-03")), as.numeric(as.POSIXct("1970-02-04"))), a=c(1,2,3))
 
-  checkEquals(getBetween(testFrame, as.POSIXct("1971-02-02"), as.POSIXct("1972-02-02")), integer(0));
-  checkEquals(getBetween(testFrame, as.POSIXct("1970-02-02"), as.POSIXct("1970-02-03")), testFrame[1:2,]);
-  checkEquals(getBetween(testFrame, as.POSIXct("1970-02-03"), as.POSIXct("1970-02-04")), testFrame[2:3,]);
+  checkEquals(getBetween(test.frame, as.numeric(as.POSIXct("1970-02-02")), as.numeric(as.POSIXct("1970-02-03"))), test.frame[1:2,])
+  checkEquals(getBetween(test.frame, as.numeric(as.POSIXct("1970-02-03")), as.numeric(as.POSIXct("1970-02-04"))), test.frame[2:3,])
+  checkEquals(getBetween(test.frame, as.numeric(as.POSIXct("1971-02-02")), as.numeric(as.POSIXct("1972-02-02"))), test.frame[FALSE,])
 }
 
 test.getClosestTo <- function() {
@@ -35,7 +35,7 @@ test.getClosestTo <- function() {
 
 test.filterWithInterval <- function() {
     test <- data.frame(time=c(2:10,10), a=c((2:10)*5,50))
-    expected <- data.frame(time=c(2,(2:5)*2), a=c(10,(2:5)*10))
+    expected <- data.frame(time=c(2,(2:5)*2), a=c(10,(2:5)*10), row.names=c(1L,3L,5L,7L,10L))
     checkEquals(mixturePrediction:::filterWithInterval(test, interval=2), expected)
 }
 

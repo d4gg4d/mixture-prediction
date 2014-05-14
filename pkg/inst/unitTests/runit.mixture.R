@@ -16,6 +16,5 @@ test.MixtureSelection.gives.proper.data.frame.to.mixtureMethod <- function() {
     return("b2")
   }
   values <- MixtureSelection(mixture.assert, test, 5, 10, c("a","b"))
-  browser()
   checkEquals(nrow(values), 35)
 }
