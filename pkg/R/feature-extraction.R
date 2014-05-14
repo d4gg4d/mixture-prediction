@@ -15,12 +15,12 @@
 #' 
 #' @return dataframe where each feature is added to it as a column
 #' 
-FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=3600, maximum.sample=1111) {
+FeatureExtraction <- function(features, data, t.dist, t.window.length, interval=3600, maximum.sample=1111, .progress="text") {
   targets <- Cursors(data, t.dist, t.window.length, interval)
   fitted <- adply(targets, 1, function(prediction) {
     history.window <- HistoryWindow(data, prediction$time - t.dist, t.window.length, sample.max.size=maximum.sample)
-    return(unlist(llply(features, FeatureFit, data=history.window, target=prediction)))
-  }, .progress = "text")
+    return(unlist(llply(features, FeatureFit, data=history.window, target=prediction))) ##laply not available because feature return might be other than 1 element vector... TODO refactor features to return alays one element
+  }, .progress=.progress)
   return(fitted)
 }
 
