@@ -24,6 +24,10 @@ getBetween <- function(data, start, end) {
   return(subset(data, time >= start & time <= end))
 }
 
+#' will return data.frame with values filtered in time with interval.
+#' NOTE: this will fail with interval of 1, with integer time
+#' column. a corner case
+#' 
 filterWithInterval <- function(data, interval) {
     minimas <- (data$time - min(data$time)) %% interval
     picked.indeces <- c(Inf, minimas[-length(minimas)]) >= minimas & minimas < c(minimas[-1], Inf)
