@@ -34,10 +34,11 @@ filterWithInterval <- function(data, interval) {
     return(data[picked.indeces, ])
 }
 
+## TODO refactor portion out...
 getSampleOf <- function(data, size=10, portion=NULL) {
   data.size <- nrow(data)
-  sampleSize <- min(ifelse(is.null(portion), size, portion*data.size), data.size)
-  return(data[sample(1:nrow(data), as.integer(sampleSize)),])
+  sampleSize <- as.integer(min(ifelse(is.null(portion), size, portion*data.size), data.size))
+  return(data[sample(data.size, sampleSize),])
 }
 
 getSubSample <- function(data, sampleError = 0.03) {
