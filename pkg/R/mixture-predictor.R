@@ -48,10 +48,10 @@ MixturePredict <- function(trained.models, mixture, score.function, feature.data
 #'
 #' @return data.frame(time, modelid, prediction1, prediction2, ..., history1, history2, ...)
 #'
-PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data) {
+PredictionsAndValidations <- function(trained.models, score.function, feature.data, test.data, do.parallel=FALSE) {
   stopifnot(!is.null(names(trained.models)))
   targets <- VectorsMatchingInTime(feature.data, test.data$time)
-  values <- PredictInternal(trained.models, targets)
+  values <- PredictInternal(trained.models, targets, do.parallel=do.parallel)
   values.with.validations <- ValidatePredictions(values, targets, score.function)
   return(values.with.validations)
 }
@@ -64,10 +64,10 @@ PredictionsAndValidations <- function(trained.models, score.function, feature.da
 #'
 #' @return data.frame of (modelid, time, prediction1, prediction2)
 #'
-PredictInternal <- function(trained.models, target.data) {
+PredictInternal <- function(trained.models, target.data, do.parallel=FALSE) {
   return(ldply(trained.models, function(model) {
     return(data.frame(time=target.data$time, predict(model, target.data)))
-  }))
+  }, .parallel=do.parallel))
 }
 
 #' takes predicted data.frame and calculates validation value(s) based on scoring function
